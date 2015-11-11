@@ -1,13 +1,10 @@
 package org.liu.controller;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.liu.persistence.User;
+import org.liu.entity.User;
 import org.liu.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
