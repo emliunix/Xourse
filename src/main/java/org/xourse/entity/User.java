@@ -16,18 +16,24 @@ import javax.persistence.Table;
         @NamedQuery(name = "findUserByUsername" ,query = "from User u where u.username = :username")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("user")
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class User {
     @Id
     private String id;
 
-    @Column
+    @Column(name = "username", nullable = false)
     private String username;
 
-    @Column
+    @Column(nullable = false)
     private String password;
 
-    @Column
-    private String role;
+    @Column(name = "role", nullable = false)
+    protected String role;
+    {
+        role = "user";
+    }
 
     public String getId() {
         return id;
@@ -57,8 +63,11 @@ public class User {
         return role;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    @Override
+    public String toString() {
+        return role + "{" +
+                id +
+                ", " + username +
+                '}';
     }
-
 }

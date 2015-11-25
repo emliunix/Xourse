@@ -8,11 +8,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.xourse.entity.Student;
 import org.xourse.entity.User;
+import org.xourse.service.AccessControlService;
 import org.xourse.service.UserService;
 import org.xourse.utils.MessageUtils;
+import org.xourse.utils.SessionUtils;
 import org.xourse.utils.UserIdBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,48 +29,40 @@ public class SysController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AccessControlService aclService;
+
     @RequestMapping(path = "/init_data")
     public Map<String, Object> initData() {
         Map<String, Object> m = null;
 
         Student stu = new Student();
-        stu.setUsername("Liu Yuhui");
+        stu.setUsername("liu");
         stu.setPassword("pass");
         String id = UserIdBuilder.studentId(24).year(2013).department(2200).major(400).build();
         stu.setId(id);
-        stu.setRole("student");
 
         userService.saveUser(stu);
 
-        return MessageUtils.success("added student");
+        return MessageUtils.success("added student " + stu);
     }
 
     @RequestMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public Map<String, Object> login(@RequestParam String username,
-                                     @RequestParam String password) {
-        Map<String, Object> m = null;
+                                     @RequestParam String password,
+                                     HttpServletRequest request) {
+        User user = aclService.authenticate(username, password);
+        if(null == user)
+            return MessageUtils.fail("login failed");
 
-        User user = userService.findUserByName("Liu Yuhui");
-        if(null == user) {
-            user = new User();
-            String userid = UserIdBuilder.studentId("023")
-                    .major("0001")
-                    .department("0002")
-                    .year("2013")
-                    .build();
-            user.setId(userid);
-            user.setUsername("Liu Yuhui");
-            user.setPassword("adminpass");
-            user.setRole("admin");
-            userService.saveUser(user);
-        }
-
-        m = MessageUtils.success("logined with name");
-        return m;
+        SessionUtils.saveUser(user, request);
+        return MessageUtils.success("login with user " + user.toString());
     }
 
     @RequestMapping(path = "/logout", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> logout() {
-        return MessageUtils.success("this is a test");
+    public Map<String, Object> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        if(null != session) session.invalidate();
+        return MessageUtils.success("logout");
     }
 }
