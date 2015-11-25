@@ -11,9 +11,11 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
+    <!-- DispatcherServlet does the job already
     <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
+    -->
 
   <!-- spring -->
 
@@ -29,7 +31,7 @@
 
   <servlet-mapping>
     <servlet-name>dispatcher</servlet-name>
-    <url-pattern>/spring/*</url-pattern>
+    <url-pattern>/sys/*</url-pattern>
   </servlet-mapping>
 
   <!-- filters -->
