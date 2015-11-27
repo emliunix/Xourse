@@ -1,11 +1,10 @@
 package org.xourse.utils;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Create Message Template
  * Created by Liu Yuhui on 2015/11/24.
  */
 public class MessageUtils {

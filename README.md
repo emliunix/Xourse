@@ -2,7 +2,7 @@
 
 ## Api Documentation
 
-返回结果通过`status`来标志是否成功，该字段有两个值：`success`,`fail`。
+返回结果通过`status`来标志是否成功，该字段有两个值：~~`success`,`fail`。~~现在改为`true`和`false`，json中的布尔值。
 
 ### 登陆登出
 
