@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="myIndexPage">
+<html ng-app="myIndexPage" ng-cloak>
 	<head>
 		<title>LayOut</title>
 		<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
@@ -37,7 +37,7 @@
 			
 			<md-content flex class="lhs_stu_content contentL" layout-fill ng-cloak>
 				<!-- 页头部分 -->
-				<md-toolbar class="md-toolbar-tools toolhead">
+				<md-toolbar class="md-toolbar-tools toolhead" style="box-shadow:2px 3px 3px gray">
 					<md-button class="md-icon-button" aria-label="Settings" show-sm hide-gt-sm ng-click="openLeftMenu()">
 						&gt;&gt;
 					</md-button>
@@ -106,7 +106,7 @@
 				</md-fab-toolbar>
 				
 				<!-- 主体部分 -->
-				<md-content layout="column" ng-view>
+				<md-content layout="column" ng-view flex="grow" style="background:#efefef;">
 
 				</md-content>
 			</md-content>
@@ -116,7 +116,8 @@
 		
 		<script src="front_frame/jquery2.js"></script>
 		
-		<script src="front_frame/angular/angular.js"></script>			
+		<script src="front_frame/angular/angular.js"></script>	
+		<script src="front_frame/angular/angular-messages.min.js"></script>
 		<script src="front_frame/angular/angular-aria.js"></script>
 		<script src="front_frame/angular/angular-animate.min.js"></script>
 		<script src="front_frame/angular/angular-route.min.js"></script>
@@ -124,149 +125,9 @@
 		
 		<script src="js/index.js"></script>
 		
-		<script>
-			$(document).ready(function(){
-				$('.contentL').scroll(function(){  
-					var vtop=$('.contentL').scrollTop();
-					if(70<=vtop){
-						if($('#fab_toolb').is(':hidden'))
-							$('#fab_toolb').fadeIn();
-					}else{
-						if(!$('#fab_toolb').is(':hidden'))
-							$('#fab_toolb').hide();
-					}
-				});
-			});
-		</script>
-
-		<script>
-			
-			/*******AppModule.js*********/
-			var myIndexPage=angular.module('myIndexPage',['ngRoute','appControllers', 'ngAnimate']);
-			
-			myIndexPage.config(['$routeProvider','$mdIconProvider',function($routeProvider,$mdIconProvider){
-				$mdIconProvider
-					.iconSet('social', 'front_frame/angular-material/img/icons/sets/social-icons.svg', 24)
-					.defaultIconSet('front_frame/angular-material/img/icons/sets/core-icons.svg', 24);
-				
-				$routeProvider.
-					/***学生路由*****/
-					when('/welcome',{              //欢迎界面   
-						templateUrl:'welcome/stu_welcome.html',
-						controller:'welcomeCtrl'
-					}).
-					when('/readnews',{              //看新闻     
-						templateUrl:'news/news.html',
-						controller:'newsCtrl'
-					}).
-					when('/chooseSubject',{			//选课、退课
-						templateUrl:'student/chooseSub.html',
-						controller:'chooseSubjectCtrl'
-					}).
-					when('/querySubject',{			//查询选课情况
-						templateUrl:'student/querySub.html',
-						controller:'querySubjectCtrl'
-					}).
-					when('/ext/queryHubuScore',{      //查询湖大成绩
-						templateUrl:'student/queryHubuScore.html',
-						controller:'queryHubuScoreCtrl'
-					}).
-					when('/ext/queryHubuCurriculum',{    //查询湖大课程表
-						templateUrl:'student/queryHubuCur.html',
-						controller:'queryHubuCurCtrl'
-					}).
-					/****教师路由****/
-					when('/teachSubject',{            //教师选课
-						templateUrl:'teacher/teacheSub.html',
-						controller:'teacheSubCtrl'
-					}).
-					when('/assessScore',{        	   //教师打平时成绩与考试成绩
-						templateUrl:'teacher/accessScore.html',
-						controller:'accessScoreCtrl'
-					}).
-					otherwise({
-						redirectTo:'/welcome'
-					});				
-			}]);
-		
-	
-			/********AppControllers.js*******/
-			var appControllers=angular.module('appControllers',['ngMaterial']);
-			
-			
-			appControllers.controller('pageCtrl',['$scope','$mdSidenav',function($scope,$mdSidenav){
-				 $scope.username="liuhongsen";
-				 
-				 $scope.menu=[
-					 //学生部分
-					 {'href':'#/welcome','text':'首页'},
-					 {'href':'#/readnews','text':'查看新闻'},
-					 {'href':'#/chooseSubject','text':'选课与退课'},
-					 {'href':'#/querySubject','text':'查询课程信息'},
-					 {'href':'#/ext/queryHubuScore','text':'湖大考试成绩'},
-					 {'href':'#/ext/queryHubuCurriculum','text':'湖大课程表'},
-					 //教师部分
-					 {'href':'#/teachSubject','text':'教授课程'},
-					 {'href':'#/assessScore','text':'成绩结算'}
-					 
-				  ];
-
-			     $scope.openLeftMenu =function(){
-					 $mdSidenav('left').toggle();
-				 };
-				 $scope.close=function(){
-					 $mdSidenav('left').close();
-				 };
-				
-				//注销操作
-				$scope.logout=function(){
-					alert(1);
-				}
-				 
-			}]);
-			
-			
-			/****************************教师**************************/
-			appControllers.controller('teacheSubCtrl',['$scope','$mdSidenav','$log',function($scope,$mdSidenav,$log){
-
-			}]);
-			
-			appControllers.controller('accessScoreCtrl',['$scope','$mdSidenav','$log',function($scope,$mdSidenav,$log){
-
-			}]);
-			
-			
-			
-			/**************************** 学生 ********************************/
-			//欢迎界面
-			appControllers.controller('welcomeCtrl',['$scope','$mdSidenav','$log',function($scope,$mdSidenav,$log){
-					$scope.imagePath='image/bkg1.jpg';
-			}]);
-			
-			//看新闻
-			appControllers.controller('newsCtrl',['$scope','$mdSidenav','$log',function($scope,$mdSidenav,$log){
-
-			}]);
-			
-			//选课、退课
-			appControllers.controller('chooseSubjectCtrl',['$scope',function($scope){
-				
-			}]);
-			
-			//查询选课情况
-			appControllers.controller('querySubjectCtrl',['$scope',function($scope){
-				
-			}]);
-			
-			//查询湖大成绩
-			appControllers.controller('queryHubuScoreCtrl',['$scope',function($scope){
-				
-			}]);
-			
-			//查询湖大课程表
-			appControllers.controller('queryHubuCurCtrl',['$scope',function($scope){
-				
-			}]);
-		</script>
+		<script src="js/AppModule.js"></script>
+		<script src="js/App.js"></script>
+		<script src="js/teacherControllers.js"></script>
+		<script src="js/studentControllers.js"></script>
 	</body>
 </html>

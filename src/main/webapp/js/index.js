@@ -4,5 +4,16 @@ $(document).ready(function(){
 		$(this).addClass('active');
 	});
 	
+	$('.contentL').scroll(function(){  
+		var vtop=$('.contentL').scrollTop();
+		
+		if(70<=vtop){
+			if($('#fab_toolb').is(':hidden'))
+				$('#fab_toolb').fadeIn();
+		}else{
+			if(!$('#fab_toolb').is(':hidden'))
+				$('#fab_toolb').hide();
+		}
+	});
 
 });
