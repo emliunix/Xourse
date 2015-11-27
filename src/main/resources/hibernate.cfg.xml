@@ -5,7 +5,7 @@
 <hibernate-configuration>
   <session-factory>
     <property name="dialect">org.hibernate.dialect.MySQL57InnoDBDialect</property>
-    <property name="connection.url">jdbc:mysql://localhost:3306/xourse?characterEncoding=utf8</property>
+    <property name="connection.url">jdbc:mysql://localhost:3306/xourse?useUnicode=true&amp;characterEncoding=utf8</property>
     <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
     <property name="connection.username">liu</property>
     <property name="connection.password">admin</property>

@@ -9,6 +9,7 @@
 
     <context:annotation-config />
     <context:component-scan base-package="org.xourse.service" />
+    <context:component-scan base-package="org.xourse.resource" />
 
     <context:property-placeholder location="classpath:/jdbc.properties"/>
     <!--

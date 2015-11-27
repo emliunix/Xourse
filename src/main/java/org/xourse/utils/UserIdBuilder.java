@@ -1,9 +1,5 @@
 package org.xourse.utils;
 
-import sun.plugin.dom.exception.InvalidStateException;
-
-import java.text.NumberFormat;
-
 /**
  * Build Student or Teacher ID
  * Created by Liu Yuhui on 2015/11/25.

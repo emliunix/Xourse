@@ -36,6 +36,24 @@ public class UserService {
         Query q = session.getNamedQuery("findAllUsers");
         return (List<User>)q.list();
     }
+    
+    public List<Teacher> findAllTeachers() {
+        Session session = sessionFactory.getCurrentSession();
+        Query q = session.getNamedQuery("findAllTeachers");
+        return (List<Teacher>)q.list();
+    }
+    
+    public List<Student> findAllStudents() {
+        Session session = sessionFactory.getCurrentSession();
+        Query q = session.getNamedQuery("findAllStudents");
+        return (List<Student>)q.list();
+    }
+    
+    public List<Admin> findAllAdmins() {
+        Session session = sessionFactory.getCurrentSession();
+        Query q = session.getNamedQuery("findAllAdmins");
+        return (List<Admin>)q.list();
+    }
 
     public User findUserByName(String username) {
         Session session = sessionFactory.getCurrentSession();
@@ -62,5 +80,15 @@ public class UserService {
         User u = new User();
         u.setId(id);
         session.delete(u);
+
+    }
+
+    public void refreshUser(User t) {
+        Session session = getSession();
+        session.refresh(t);
+    }
+
+    private Session getSession() {
+        return sessionFactory.getCurrentSession();
     }
 }

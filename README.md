@@ -8,6 +8,8 @@
 
 * `/sys/login`
   * POST {username, password} -> {status, msg}
+* `/sys/check_user`
+  * GET -> {status, msg, user: {id, username, role}}
 * `/sys/logout`
   * GET -> {status, msg}
   
@@ -18,22 +20,27 @@
 
 ### 教师功能
 
-教师功能挂在`/api/teacher/[:id/]`下面
+教师功能挂在`/api/teacherself` 或者`/api/teacher/:id/`下面
 
 * `/elective_courses` "教师选择想教的选修课"
   * GET -> {status, msg, courses: [{id, year, name, type, department, teacher}, ... ]}
   * POST [{flag, id}, ...] -> {status, msg}
 * `/courses` "教师对其课程的操作"
   * GET -> {status, msg, courses: [{id, year, name, type, department, major, teacher, class, isSubmitted}, ...]}
+* `/courses/year`
+  * GET -> {status, msg, years: [year, ... ]}
 * `/courses/year/:year` "操作对应年份的课程"
   * GET 和 `/courses` "结果格式相同"
 * `/courses/:id` "教师评分"
   * GET -> {status, msg, regularRate, finalExamRate, isSubmitted, students: [{id, name, gender, regularGrade, finalExamGrade, finalGrade}, ... ]}
   * POST [{id, regularGrade, finalExamGrade}] -> {status, msg}
+* `/courses/:id/rate`
+  * GET -> {status, msg, regularRate, finalExamRate}
+  * POST {regularRate, finalExamRate} -> {status, msg}
   
 ### 学生功能
   
-学生功能放在`/api/student/[:id/]`下面
+学生功能放在`/api/studentself`或`/api/student/:id/`下面
   
 * `/elective_courses` "学生查看选修课，选择选修课"
   * GET -> {status, msg, isModifiable, courses: [{id, year, name, type, department, teacher}, ... ]}

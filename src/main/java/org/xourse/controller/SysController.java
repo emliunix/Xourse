@@ -59,6 +59,20 @@ public class SysController {
         return MessageUtils.success("login with user " + user.toString());
     }
 
+    @RequestMapping(path = "/check_user", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> check(HttpServletRequest request) {
+        User user = SessionUtils.getUser(request);
+        if(null == user)
+            return MessageUtils.fail("user not login");
+        Map<String, Object> m = MessageUtils.success("user login");
+        Map<String, String> u = new HashMap<>();
+        u.put("username", user.getUsername());
+        u.put("id", user.getId());
+        u.put("role", user.getRole());
+        m.put("user", u);
+        return m;
+    }
+
     @RequestMapping(path = "/logout", produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> logout(HttpServletRequest request) {
         HttpSession session = request.getSession();

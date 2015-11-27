@@ -1,5 +1,7 @@
 package org.xourse.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**
@@ -11,6 +13,8 @@ public class Teacher extends User {
     {
         role = "teacher";
     }
+
+    @JsonIgnore
     @ManyToOne
     private Department department;
 
