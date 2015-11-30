@@ -40,11 +40,11 @@ public class AccessControlService {
         }
     }
 
-    public boolean canAccess(String userid, String ... roles) {
-        Preconditions.checkNotNull(userid);
+    public boolean canAccess(int userId, String ... roles) {
+        Preconditions.checkNotNull(userId);
         Preconditions.checkArgument(null != roles && roles.length > 0);
         try {
-            User user = userService.findUser(userid);
+            User user = userService.findUser(userId);
             return canAccess(user, roles);
         } catch (EntityNotFoundException e) {
             return false;

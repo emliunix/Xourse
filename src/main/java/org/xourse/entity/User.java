@@ -1,6 +1,5 @@
 package org.xourse.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
@@ -25,7 +24,8 @@ import javax.persistence.Table;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class User {
     @Id
-    private String id;
+    @GeneratedValue
+    private Integer id;
 
     @Column(name = "username", nullable = false)
     private String username;
@@ -40,11 +40,11 @@ public class User {
         role = "user";
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -70,9 +70,6 @@ public class User {
 
     @Override
     public String toString() {
-        return role + "{" +
-                id +
-                ", " + username +
-                '}';
+        return role + "{" + id + ", " + username + '}';
     }
 }

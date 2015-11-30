@@ -18,11 +18,19 @@ public class MessageUtils {
         return m;
     }
 
+    public static Map<String, Object> success() {
+        return success("success");
+    }
+
     public static Map<String, Object> fail(String msg) {
         Map<String, Object> m = new HashMap<>();
         m.put("status", STATUS_FAIL);
         m.put("msg", msg);
         return m;
+    }
+
+    public static Map<String, Object> fail() {
+        return fail("failed");
     }
 
 }

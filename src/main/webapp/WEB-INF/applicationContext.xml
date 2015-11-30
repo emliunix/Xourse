@@ -11,8 +11,8 @@
     <context:component-scan base-package="org.xourse.service" />
     <context:component-scan base-package="org.xourse.resource" />
 
+    <!-- hibernate configuration using pure spring bean -->
     <context:property-placeholder location="classpath:/jdbc.properties"/>
-    <!--
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <property name="driverClass" value="${driverClass}"/>
         <property name="jdbcUrl" value="${jdbcUrl}"/>
@@ -25,14 +25,14 @@
     <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="packagesToScan">
-            <array value-type="java.lang.String"><value>org.liu.entity</value></array>
+            <array value-type="java.lang.String"><value>org.xourse.entity</value></array>
         </property>
         <property name="hibernateProperties">
             <props>
                 <prop key="hibernate.dialect">org.hibernate.dialect.MySQL57InnoDBDialect</prop>
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="hibernate.show_sql">true</prop>
-                <prop key="format_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
             </props>
         </property>
     </bean>
@@ -41,16 +41,16 @@
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="dataSource" ref="dataSource"/>
     </bean>
-    -->
-
+<!--
     <bean name="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-        <property name="configLocation" value="classpath:hibernate.cfg.xml"/>
+        <property name="configLocation" value="classpath:hibernate.properties"/>
         <property name="packagesToScan" value="org.xourse.entity"/>
     </bean>
 
     <bean name="txManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
+-->
 
     <tx:annotation-driven transaction-manager="txManager"/>
 

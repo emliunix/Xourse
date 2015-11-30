@@ -4,6 +4,7 @@ package org.xourse.utils;
  * Build Student or Teacher ID
  * Created by Liu Yuhui on 2015/11/25.
  */
+@Deprecated
 public class UserIdBuilder {
 
     public static StudentIdBuilder studentId(String id) {

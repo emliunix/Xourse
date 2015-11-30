@@ -2,12 +2,15 @@ package org.xourse.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.xourse.entity.Department;
 import org.xourse.entity.Teacher;
 import org.xourse.service.UserService;
 import org.xourse.utils.MessageUtils;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.Map;
 
@@ -17,9 +20,10 @@ import java.util.Map;
 @Path("/teachers")
 @Component
 public class TeachersRes {
+    @Context
+    private UriInfo uriInfo;
     @Autowired
     private UserService userService;
-
     @Autowired
     private TeacherRes teacherRes;
 
@@ -39,38 +43,24 @@ public class TeachersRes {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, Object> createTeacher(TeacherPostSubmit submit) {
+    public Map<String, Object> createTeacher(TeacherInfoSubmit submit) {
         Map<String, Object> m = MessageUtils.success("success");
-        Teacher teacher = submit.getTeacher();
-        userService.saveUser(teacher);
-        m.put("teacher", teacher);
+        Department d = new Department();
+        d.setId(submit.departmentId);
+        userService.createTeacher(submit.teacher, submit.profile, d);
+        m.put("teacher", submit.teacher);
         return m;
-    }
-
-    private static class TeacherPostSubmit {
-        Teacher teacher;
-        Long departmentId;
-
-        public Teacher getTeacher() {
-            return teacher;
-        }
-
-        public void setTeacher(Teacher teacher) {
-            this.teacher = teacher;
-        }
-
-        public Long getDepartmentId() {
-            return departmentId;
-        }
-
-        public void setDepartmentId(Long departmentId) {
-            this.departmentId = departmentId;
-        }
     }
 
     @Path("/{id}/")
     public TeacherRes doTeacher(@PathParam("id")String id) {
-        teacherRes.setId(id);
+        int _id;
+        try {
+            _id = Integer.valueOf(id);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(uriInfo.getPath());
+        }
+        teacherRes.setId(_id);
         return teacherRes;
     }
 }

@@ -1,6 +1,5 @@
 package org.xourse.resource;
 
-import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -9,12 +8,10 @@ import org.xourse.service.UserService;
 import org.xourse.utils.MessageUtils;
 import org.xourse.utils.SessionUtils;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.MessageBodyWriter;
 import java.util.Map;
 
 /**
@@ -23,13 +20,13 @@ import java.util.Map;
 @Component
 @Scope("request")
 public class UserRes  {
-    private String id;
+    private Integer id;
     @Autowired
     private UserService userService;
     @Autowired
     private HttpServletRequest request;
 
-    private UserRes(String id) {
+    private UserRes(Integer id) {
         this.id = id;
     }
 
@@ -45,7 +42,7 @@ public class UserRes  {
     }
 
     public static class WrappedUser {
-        private String id;
+        private Integer id;
         private String username;
         private String password;
         private String role;
@@ -57,7 +54,7 @@ public class UserRes  {
             role = user.getRole();
         }
 
-        public String getId() {
+        public Integer getId() {
             return id;
         }
 

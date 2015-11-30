@@ -39,8 +39,6 @@ public class SysController {
         Student stu = new Student();
         stu.setUsername("liu");
         stu.setPassword("pass");
-        String id = UserIdBuilder.studentId(24).year(2013).department(2200).major(400).build();
-        stu.setId(id);
 
         userService.saveUser(stu);
 
@@ -65,7 +63,7 @@ public class SysController {
         if(null == user)
             return MessageUtils.fail("user not login");
         Map<String, Object> m = MessageUtils.success("user login");
-        Map<String, String> u = new HashMap<>();
+        Map<String, Object> u = new HashMap<>();
         u.put("username", user.getUsername());
         u.put("id", user.getId());
         u.put("role", user.getRole());

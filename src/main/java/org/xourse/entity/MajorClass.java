@@ -1,5 +1,8 @@
 package org.xourse.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,21 +15,24 @@ import java.util.List;
 @Entity
 public class MajorClass {
     @Id
-    private long id;
+    private Integer id;
 
+    @JsonView(DefaultView.class)
     private String name;
 
+    @JsonView(DetailedView.class)
     @ManyToOne
     private Major major;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "majorClass")
     private List<Student> students = new ArrayList<>();
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -53,4 +59,7 @@ public class MajorClass {
     public void setName(String name) {
         this.name = name;
     }
+
+    public interface DefaultView { }
+    public interface DetailedView extends DefaultView { }
 }

@@ -1,5 +1,7 @@
 package org.xourse.resource;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -10,7 +12,6 @@ import org.xourse.service.UserService;
 import org.xourse.utils.MessageUtils;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,9 +26,9 @@ public class TeacherRes {
     @Autowired
     UserService userService;
 
-    private String id;
+    private Integer id;
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -55,13 +56,17 @@ public class TeacherRes {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, Object> update(Teacher teacher) {
-        if(null == teacher)
-            return MessageUtils.fail("teacher is null");
-        teacher.setId(id);
-        userService.updateUser(teacher);
+    public Map<String, Object> update(TeacherInfoSubmit submit) {
+        if(null == submit)
+            return MessageUtils.fail("invalid submit");
+        submit.teacher.setId(id);
+        userService.updateTeacher(submit.teacher, submit.profile);
         Map<String, Object> m = MessageUtils.success("teacher updated");
-        m.put("teacher", teacher);
+        try {
+            m.put("teacher", new ObjectMapper().writeValueAsString(submit));
+        } catch (JsonProcessingException e) {
+            m.put("err msg", e.getMessage());
+        }
 
         return m;
     }
@@ -72,4 +77,5 @@ public class TeacherRes {
         userService.deleteUser(id);
         return MessageUtils.success("teacher deleted");
     }
+
 }

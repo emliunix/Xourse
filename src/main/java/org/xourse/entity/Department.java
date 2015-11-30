@@ -1,5 +1,7 @@
 package org.xourse.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -9,22 +11,25 @@ import java.util.List;
 @Entity
 public class Department {
     @Id
-    private long id;
+    @GeneratedValue
+    private Integer id;
 
     @Column
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "department")
     private List<Major> majors;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "department")
     private List<Teacher> teachers;
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
