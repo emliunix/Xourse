@@ -45,7 +45,7 @@ myIndexPage.config(['$routeProvider','$mdIconProvider',function($routeProvider,$
 			templateUrl:'teacher/accessScore.html',
 			controller:'accessScoreCtrl'
 		}).
-		when('/calculateScore/:sub/:pro/:major',{        	   //教师打平时成绩与考试成绩
+		when('/calculateScore/:sub/:pro/:major/:id',{        	   //教师打平时成绩与考试成绩
 			templateUrl:'teacher/calculateScore.html',
 			controller:'calScoreCtrl'
 		}).

@@ -48,19 +48,19 @@
 							</md-button>
 						</md-fab-trigger>
 						<md-fab-actions>
-							<md-button aria-label="info" class="md-fab md-raised md-mini">
+							<md-button aria-label="info" class="md-fab md-raised md-mini" ng-click="modifyInfo($event)">
 								<md-tooltip md-direction="bottom" md-autohide="false">
 											修改个人信息
 								</md-tooltip>
 								<md-icon md-svg-src="social:people-outline" style="color:blue" aria-label="info"></md-icon>
 							</md-button>
-							<md-button aria-label="pwd" class="md-fab md-raised md-mini">
+							<md-button aria-label="pwd" class="md-fab md-raised md-mini" ng-click="modifyPwd($event)">
 								<md-tooltip md-direction="bottom" md-autohide="false">
 											修改密码
 								</md-tooltip>
 								<md-icon md-svg-src="social:notifications-on"style="color:blue" aria-label="pwd"></md-icon>
 							</md-button>
-							<md-button aria-label="motto" class="md-fab md-raised md-mini">
+							<md-button aria-label="motto" class="md-fab md-raised md-mini" ng-click="modifyMotto($event)">
 								<md-tooltip md-direction="bottom" md-autohide="false">
 											添加个性签名
 								</md-tooltip>
@@ -92,13 +92,13 @@
 							<md-button ng-click="logout()">
 								[退出]
 							</md-button>
-							<md-button aria-label="motto" class="md-fab md-raised md-mini">
+							<md-button aria-label="motto" class="md-fab md-raised md-mini" ng-click="modifyMotto($event)">
 								<md-icon md-svg-src="social:share" aria-label="motto" style="color:blue"></md-icon>
 							</md-button>
-							<md-button aria-label="pwd" class="md-fab md-raised md-mini">
+							<md-button aria-label="pwd" class="md-fab md-raised md-mini"  ng-click="modifyPwd($event)">
 								<md-icon md-svg-src="social:notifications-on"style="color:blue" aria-label="pwd"></md-icon>
 							</md-button>
-							<md-button aria-label="info" class="md-fab md-raised md-mini">
+							<md-button aria-label="info" class="md-fab md-raised md-mini" ng-click="modifyInfo($event)">
 								<md-icon md-svg-src="social:people-outline" style="color:blue" aria-label="info"></md-icon>
 							</md-button>
 						</md-fab-actions>

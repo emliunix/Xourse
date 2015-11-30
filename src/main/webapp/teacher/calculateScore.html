@@ -42,7 +42,7 @@
 	#s_table
 	{
 		border:1px solid rgb(79,79,217);
-		margin:0px auto;
+		margin-left:80px;
 		margin-bottom:20px;
 	}
 	#s_table th
@@ -125,13 +125,13 @@
 					<span ng-show="isOverRange[$index]" style="color:red;font-weight:bold;">输入0-100间的数字!</span>
 				</td>
 				<td> 
-					<md-icon md-svg-icon="announcement" ng-click="isVisible==true?isVisible=false:isVisible=true"></md-icon>
+					<md-icon md-svg-icon="announcement" ng-click="canEdit($event)"></md-icon>
 				</td>
 			</tr>
 		</table>
 		<div layout="row" layout-align="center center" style="margin-bottom:50px;">
-			<md-button class="md-raised md-accent">提交</md-button>
-			<md-button class="md-raised md-accent">保存</md-button>
+			<md-button class="md-raised md-accent" ng-hide="isSubmitted" ng-click="submitData()">提交</md-button>
+			<md-button class="md-raised md-accent" ng-hide="isSubmitted" ng-click="storeData()">保存</md-button>
 		</div>
 	</div>
 </div>

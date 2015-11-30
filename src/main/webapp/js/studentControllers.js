@@ -1,14 +1,4 @@
 /**************************** 学生 ********************************/
-//欢迎界面
-appControllers.controller('welcomeCtrl',['$scope','$mdSidenav','$log',function($scope,$mdSidenav,$log){
-		$scope.imagePath='image/bkg1.jpg';
-}]);
-
-//看新闻
-appControllers.controller('newsCtrl',['$scope','$mdSidenav','$log',function($scope,$mdSidenav,$log){
-
-}]);
-
 //选课、退课
 appControllers.controller('chooseSubjectCtrl',['$scope','$timeout',function($scope,$timeout){
 	
@@ -51,7 +41,7 @@ appControllers.controller('querySubjectCtrl',['$scope',function($scope){
 	
 }]);
 
-//查询湖大成绩
+//查询湖大成绩和课程表
 appControllers.controller('queryHubuScoreCtrl',['$scope','$mdDialog',function($scope,$mdDialog){
 	
 	$scope.IsLogin=true;
@@ -159,27 +149,3 @@ appControllers.controller('queryHubuScoreCtrl',['$scope','$mdDialog',function($s
 
 
 }]);
-
-//查询湖大课程表
-// appControllers.controller('queryHubuCurCtrl',['$scope','$mdDialog','hubuIdProvider',function($scope,$mdDialog,hubuIdProvider){
-	
-// 	if(hubuIdProvider.getId()=='')
-// 		$scope.IsLoged=false;
-// 	else 
-// 		$scope.IsLoged=true;
-	
-	
-// 	var cur_url='http://localhost:50504/Service1.asmx/GetCur?jsoncallback=?';
-// 	$scope.getCur=function(){
-		
-// 		$.ajax({
-// 			type: "post",
-// 			url:cur_url,
-// 			dataType: "jsonp",
-// 			data:{username:hubuIdProvider.getId()},
-// 			success: function (result){
-// 				$('.cur_list').html(result.status);
-// 			}
-// 		});
-// 	};
-// }]);
