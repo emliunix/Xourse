@@ -19,6 +19,12 @@
             <artifactId>jackson-jaxrs-json-provider</artifactId>
             <version>${jackson-version}</version>
         </dependency>
+        <!-- jackson for hibernate -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-hibernate4</artifactId>
+            <version>${jackson-version}</version>
+        </dependency>
         <!-- spring framework -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -204,7 +210,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jackson-version>2.5.4</jackson-version>
+        <!--<jackson-version>2.5.4</jackson-version>-->
+        <jackson-version>2.6.3</jackson-version>
         <spring-framework-version>4.2.1.RELEASE</spring-framework-version>
         <spring-security-version>4.0.3.RELEASE</spring-security-version>
         <mysql-connector-java-version>5.1.36</mysql-connector-java-version>

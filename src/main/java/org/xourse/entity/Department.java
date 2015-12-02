@@ -18,11 +18,11 @@ public class Department {
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "department")
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     private List<Major> majors;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "department")
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     private List<Teacher> teachers;
 
     public Integer getId() {

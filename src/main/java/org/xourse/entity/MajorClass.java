@@ -15,17 +15,16 @@ import java.util.List;
 @Entity
 public class MajorClass {
     @Id
+    @GeneratedValue
     private Integer id;
-
-    @JsonView(DefaultView.class)
+    @Column(length = 15)
+    private String year;
+    @Column(length = 50)
     private String name;
-
-    @JsonView(DetailedView.class)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Major major;
-
     @JsonIgnore
-    @OneToMany(mappedBy = "majorClass")
+    @OneToMany(mappedBy = "majorClass", fetch = FetchType.LAZY)
     private List<Student> students = new ArrayList<>();
 
     public Integer getId() {
@@ -34,6 +33,14 @@ public class MajorClass {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
 
     public Major getMajor() {
@@ -59,7 +66,4 @@ public class MajorClass {
     public void setName(String name) {
         this.name = name;
     }
-
-    public interface DefaultView { }
-    public interface DetailedView extends DefaultView { }
 }

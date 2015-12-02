@@ -1,5 +1,7 @@
 package org.xourse;
 
+import org.apache.log4j.Logger;
+import org.hibernate.annotations.Check;
 import org.xourse.entity.User;
 import org.xourse.utils.SessionUtils;
 
@@ -14,18 +16,22 @@ import java.io.IOException;
  * Created by Liu Yuhui on 2015/11/26.
  */
 public class CheckLoginFilter implements Filter {
+
+    private Logger logger = Logger.getLogger(CheckLoginFilter.class);
     @Override
     public void init(FilterConfig filterConfig) throws ServletException { }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         User user = SessionUtils.getUser((HttpServletRequest)request);
+        logger.info("Before filter");
         if (null == user) {
             HttpServletResponse resp = (HttpServletResponse)response;
             resp.sendRedirect(request.getServletContext().getContextPath() + "/login.html");
         } else {
             chain.doFilter(request, response);
         }
+        logger.info("After filter");
     }
 
     @Override

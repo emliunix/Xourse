@@ -32,12 +32,18 @@ public class MajorClassService {
         MajorClass c = (MajorClass)getSession().get(MajorClass.class, id);
         if(null == c)
             return null;
-        Hibernate.initialize(c);
+        Hibernate.initialize(c.getMajor());
         return c;
     }
 
-    public void update(MajorClass c) {
-        getSession().update(c);
+    public MajorClass update(MajorClass c) {
+        Session sess = getSession();
+        MajorClass clazz = (MajorClass)sess.load(MajorClass.class, c.getId());
+        if(c.getName() != null) clazz.setName(c.getName());
+        if(c.getYear() != null) clazz.setYear(c.getYear());
+        if(null != c.getMajor()) clazz.setMajor(c.getMajor());
+        sess.flush();
+        return clazz;
     }
 
     public void delete(int id) {

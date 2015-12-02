@@ -1,9 +1,12 @@
 package org.xourse.resource;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.xourse.entity.Major;
 import org.xourse.entity.MajorClass;
-import org.xourse.entity.Student;
+import org.xourse.resource.info.MajorClassInfo;
+import org.xourse.resource.info.StudentInfo;
 import org.xourse.service.MajorClassService;
 import org.xourse.utils.MessageUtils;
 
@@ -11,6 +14,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Major class service
@@ -26,9 +30,10 @@ public class MajorClassesRes {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Map<String, Object> getMajorClasses() {
-        List<MajorClass> classes = null;
+        List<MajorClassInfo> classes = null;
         try {
-            classes = majorClassService.findAll();
+            classes = majorClassService.findAll().stream()
+            .map(MajorClassInfo::new).collect(Collectors.toList());
         } catch (Exception e) {
             return MessageUtils.fail("failed");
         }
@@ -39,14 +44,20 @@ public class MajorClassesRes {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, Object> createMajorClass(MajorClass d) {
+    public Map<String, Object> createMajorClass(MajorClassSubmit submit) {
+        MajorClass clazz = submit.majorClass;
+        if(null != submit.majorId) {
+            Major m = new Major();
+            m.setId(submit.majorId);
+            clazz.setMajor(m);
+        }
         try {
-            majorClassService.create(d);
+            majorClassService.create(clazz);
         } catch (Exception e) {
-            return MessageUtils.fail("create MajorClass failed");
+            return MessageUtils.fail(e.getMessage());
         }
         Map<String, Object> m = MessageUtils.success("create MajorClass success");
-        m.put("MajorClass", d);
+        m.put("MajorClass", clazz);
         return m;
     }
 
@@ -54,6 +65,12 @@ public class MajorClassesRes {
     public MajorClassRes doPath(@PathParam("id")String id) {
         int _id = Integer.valueOf(id);
         return new MajorClassRes(_id);
+    }
+
+    public static class MajorClassSubmit {
+        public Integer majorId;
+        @JsonUnwrapped
+        public MajorClass majorClass;
     }
 
     public class MajorClassRes {
@@ -79,16 +96,24 @@ public class MajorClassesRes {
 
         @PUT
         @Produces(MediaType.APPLICATION_JSON)
-        public Map<String, Object> updateMajorClass(MajorClass d) {
-            if(null == d)
+        public Map<String, Object> updateMajorClass(MajorClassSubmit submit) {
+            if(null == submit)
                 return MessageUtils.fail("invalid data");
-            d.setId(id);
+            MajorClass clazz = submit.majorClass;
+            clazz.setId(id);
+            if(null != submit.majorId) {
+                Major m = new Major();
+                m.setId(submit.majorId);
+                clazz.setMajor(m);
+            }
             try {
-                majorClassService.update(d);
+                clazz = majorClassService.update(clazz);
             } catch (Exception e) {
                 return MessageUtils.fail("update MajorClass failed");
             }
-            return MessageUtils.success("update MajorClass success");
+            Map<String, Object> m = MessageUtils.success("update MajorClass success");
+            m.put("majorClass", clazz);
+            return m;
         }
 
         @DELETE
@@ -106,9 +131,10 @@ public class MajorClassesRes {
         @GET
         @Produces(MediaType.APPLICATION_JSON)
         public Map<String, Object> getStudents() {
-            List<Student> stus;
+            List<StudentInfo> stus;
             try {
-                stus = majorClassService.findStudents(id);
+                stus = majorClassService.findStudents(id).stream()
+                .map(StudentInfo::new).collect(Collectors.toList());
             } catch (Exception e) {
                 return MessageUtils.fail(e.getMessage());
             }
@@ -116,5 +142,7 @@ public class MajorClassesRes {
             m.put("students", stus);
             return m;
         }
+
     }
+
 }

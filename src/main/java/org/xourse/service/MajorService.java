@@ -10,7 +10,9 @@ import org.xourse.entity.Department;
 import org.xourse.entity.Major;
 import org.xourse.entity.MajorClass;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Liu Yuhui on 2015/11/30.
@@ -40,7 +42,11 @@ public class MajorService {
     }
 
     public void update(Major m) {
-        getSession().update(m);
+        Session session = getSession();
+        Major t = (Major)session.load(Major.class, m.getId());
+        if(m.getName() != null) t.setName(m.getName());
+        if(m.getDepartment() != null) t.setDepartment(m.getDepartment());
+        getSession().flush();
     }
 
     public void delete(int id) {
@@ -55,7 +61,7 @@ public class MajorService {
 
     public List<MajorClass> findMajorClasses(int id) {
         Major m = (Major)getSession().get(MajorClass.class, id);
-        Hibernate.initialize(m);
+        Hibernate.initialize(m.getClasses());
         return m.getClasses();
     }
 }
