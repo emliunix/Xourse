@@ -1,5 +1,7 @@
 package org.xourse.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**
@@ -7,6 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 public class StudentProfile {
+    @JsonIgnore
     @Id
     @GeneratedValue
     private int id;
@@ -68,7 +71,7 @@ public class StudentProfile {
     }
 
     public void setPoliticalStatus(String politicalStatus) {
-        politicalStatus = politicalStatus;
+        this.politicalStatus = politicalStatus;
     }
 
     public String getSignature() {

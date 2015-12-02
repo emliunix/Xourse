@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * Created by Liu Yuhui on 2015/11/30.
  */
 @Component
-@Path("/major_classes")
+@Path("/major_class")
 public class MajorClassesRes {
 
     @Autowired

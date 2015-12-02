@@ -18,7 +18,7 @@ import java.util.Map;
  * Departments Resource
  * Created by Liu Yuhui on 2015/11/30.
  */
-@Path("/departments")
+@Path("/department")
 @Component
 public class DepartmentsRes {
 

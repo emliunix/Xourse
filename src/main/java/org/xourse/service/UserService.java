@@ -1,16 +1,14 @@
 package org.xourse.service;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.xourse.entity.*;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.xourse.resource.TeacherInfoSubmit;
 
 import javax.annotation.Resource;
-import java.io.Serializable;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -22,6 +20,8 @@ import java.util.List;
 public class UserService {
     @Resource
     SessionFactory sessionFactory;
+
+    private static Logger logger = Logger.getLogger(UserService.class);
 
     private Session getSession() {
         return sessionFactory.getCurrentSession();
@@ -47,6 +47,14 @@ public class UserService {
         return (List<User>)q.list();
     }
 
+    public User updateUser(User user) {
+        Session sess = getSession();
+        User u = (User) sess.load(User.class, user.getId());
+        if(null != user.getUsername()) u.setUsername(user.getUsername());
+        if(null != user.getPassword()) u.setPassword(user.getPassword());
+        return u;
+    }
+
     public void deleteUser(int id) {
         User u = new User();
         u.setId(id);
@@ -59,23 +67,10 @@ public class UserService {
 
     /* Teacher */
 
-    /**
-     * Create a teacher
-     * @param teacher
-     * @param profile
-     * @param d
-     */
-    public void createTeacher(Teacher teacher, TeacherProfile profile, Department d) {
-        if(null == teacher)
-            throw new IllegalArgumentException("teacher is null");
-        Session session = getSession();
-        if(d.getId() != null)
-            teacher.setDepartment(d);
-        if(null != profile) {
-            teacher.setTeacherProfile(profile);
-            session.save(profile);
-        }
-        session.save(teacher);
+    public void createTeacher(Teacher teacher) {
+        if(null == teacher.getTeacherProfile())
+            teacher.setTeacherProfile(new TeacherProfile());
+        getSession().save(teacher);
     }
 
     /**
@@ -91,79 +86,84 @@ public class UserService {
     /**
      * update a teacher
      * @param teacher
-     * @param profile
      */
-    public void updateTeacher(Teacher teacher, TeacherProfile profile) {
+    public Teacher updateTeacher(Teacher teacher) {
         Session session = getSession();
-        Teacher t = (Teacher)session.get(Teacher.class, teacher.getId());
-        TeacherProfile p = (TeacherProfile)session.get(TeacherProfile.class, profile.getId());
-        if(teacher.getUsername() != null) t.setUsername(t.getUsername());
-        if(teacher.getPassword() != null) t.setPassword(t.getPassword());
-        //if(teacher.getDepartment() != null) t.setDepartment(teacher);
-
-        if(profile.getIdCardNumber() == null) profile.setIdCardNumber(p.getIdCardNumber());
-        if(profile.getEmail() == null) profile.setEmail(p.getEmail());
-        if(profile.getPoliticalStatus() == null) profile.setPoliticalStatus(p.getPoliticalStatus());
-        if(profile.getResidence() == null) profile.setResidence(p.getResidence());
-        if(profile.getSignature() == null) profile.setSignature(p.getSignature());
-        if(profile.getTelNumber() == null) profile.setTelNumber(p.getTelNumber());
-        if(profile.getTitle() == null) profile.setTitle(p.getTitle());
-
-        teacher.setTeacherProfile(profile);
-
-        session.merge(p);
-        session.merge(t);
+        Teacher t = (Teacher)session.load(Teacher.class, teacher.getId());
+        mergeInTeacher(t, teacher);
+        session.flush();
+        return t;
     }
 
-    /**
-     * Update a teachers profile
-     * @param teacherId
-     * @param profile
-     */
-    public void updateTeacherProfile(int teacherId, TeacherProfile profile) {
-        Teacher t = new Teacher();
-        t.setId(teacherId);
-        updateTeacher(t, profile);
+    private void mergeInTeacher(Teacher dest, Teacher src) {
+        if(src.getUsername() != null) dest.setUsername(src.getUsername());
+        if(src.getPassword() != null) dest.setPassword(src.getPassword());
+        if(src.getDepartment() != null) dest.setDepartment(src.getDepartment());
+        if(null != src.getTeacherProfile()) {
+            if(null == dest.getTeacherProfile()) {
+                dest.setTeacherProfile(new TeacherProfile());
+                logger.warn("profile doesn't exist for a teacher, this is an error");
+            }
+            mergeInTeacherProfile(dest.getTeacherProfile(), src.getTeacherProfile());
+        }
+    }
+
+    private void mergeInTeacherProfile(TeacherProfile dest, TeacherProfile src) {
+        if(src.getIdCardNumber() != null) dest.setIdCardNumber(src.getIdCardNumber());
+        if(src.getEmail() != null) dest.setEmail(src.getEmail());
+        if(src.getPoliticalStatus() != null) dest.setPoliticalStatus(src.getPoliticalStatus());
+        if(src.getResidence() != null) dest.setResidence(src.getResidence());
+        if(src.getSignature() != null) dest.setSignature(src.getSignature());
+        if(src.getTelNumber() != null) dest.setTelNumber(src.getTelNumber());
+        if(src.getTitle() != null) dest.setTitle(src.getTitle());
     }
 
     /* Student */
-    
+
+    public void createStudent(Student student) {
+        Session session = getSession();
+        if(null == student.getStudentProfile())
+            student.setStudentProfile(new StudentProfile());
+        session.save(student);
+    }
+
     public List<Student> findAllStudents() {
         Session session = sessionFactory.getCurrentSession();
         Query q = session.getNamedQuery("findAllStudents");
         return (List<Student>)q.list();
     }
 
-    public void updateStudent(Student student, StudentProfile profile) {
+    public Student updateStudent(Student student) {
         Session session = getSession();
-        Student s = (Student)session.get(Student.class, student.getId());
-        StudentProfile p = (StudentProfile)session.get(StudentProfile.class, profile.getId());
-        if(student.getUsername() == null) student.setUsername(s.getUsername());
-        if(student.getPassword() == null) student.setPassword(s.getPassword());
-        if(student.getMajorClass() == null) student.setMajorClass(s.getMajorClass());
+        Student s = (Student)session.load(Student.class, student.getId());
 
-        if(profile.getIdCardNumber() == null) profile.setIdCardNumber(p.getIdCardNumber());
-        if(profile.getEmail() == null) profile.setEmail(p.getEmail());
-        if(profile.getPoliticalStatus() == null) profile.setPoliticalStatus(p.getPoliticalStatus());
-        if(profile.getResidence() == null) profile.setResidence(p.getResidence());
-        if(profile.getSignature() == null) profile.setSignature(p.getSignature());
-        if(profile.getTelNumber() == null) profile.setTelNumber(p.getTelNumber());
+        // apply updates
+        mergeInStudent(s, student);
 
-        student.setStudentProfile(profile);
-
-        session.merge(profile);
-        session.merge(student);
+        session.flush();
+        return s;
     }
 
-    public void updateStudentProfile(int studentId, StudentProfile profile) {
-        Student t = new Student();
-        t.setId(studentId);
-        updateStudent(t, profile);
+    private void mergeInStudent(Student target, Student source) {
+        if(source.getUsername() != null) target.setUsername(source.getUsername());
+        if(source.getPassword() != null) target.setPassword(source.getPassword());
+        if(source.getMajorClass() != null) target.setMajorClass(source.getMajorClass());
+        if(null != source.getStudentProfile()) {
+            if(null == target.getStudentProfile()) {
+                target.setStudentProfile(new StudentProfile());
+                logger.warn("profile doesn't exist for a student, this is an error");
+            }
+            mergeInStudentProfile(target.getStudentProfile(), source.getStudentProfile());
+        }
     }
 
-    public void updlateStudentProfile(StudentProfile profile) {
-        if(0 != profile.getId())
-        getSession().update(profile);
+    private void mergeInStudentProfile(StudentProfile dest, StudentProfile src) {
+        if(src.getIdCardNumber() != null) dest.setIdCardNumber(src.getIdCardNumber());
+        if(src.getEmail() != null) dest.setEmail(src.getEmail());
+        if(src.getPoliticalStatus() != null) dest.setPoliticalStatus(src.getPoliticalStatus());
+        if(src.getResidence() != null) dest.setResidence(src.getResidence());
+        if(src.getSignature() != null) dest.setSignature(src.getSignature());
+        if(src.getTelNumber() != null) dest.setTelNumber(src.getTelNumber());
     }
 
     /* Admin */
@@ -174,12 +174,17 @@ public class UserService {
         return (List<Admin>)q.list();
     }
 
-    public void updateAdmin(Admin admin) {
-        Session session = getSession();
-        Admin a = (Admin)session.get(Admin.class, admin.getId());
-        if(admin.getUsername() == null) admin.setUsername(a.getUsername());
-        if(admin.getPassword() == null) admin.setPassword(a.getPassword());
-
-        session.merge(admin);
+    public void createAdmin(Admin a) {
+        Session sess = getSession();
+        sess.save(a);
     }
+
+    public Admin updateAdmin(Admin admin) {
+        Session sess = getSession();
+        Admin a = (Admin) sess.load(Admin.class, admin.getId());
+        if(null != admin.getUsername()) a.setUsername(admin.getUsername());
+        if(null != admin.getPassword()) a.setPassword(admin.getPassword());
+        return a;
+    }
+
 }

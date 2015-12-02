@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Liu Yuhui on 2015/11/28.
  */
 @Entity
-public class PlanedCourse {
+public class CoursePlan {
     @Id
     @GeneratedValue
     private int id;
