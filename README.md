@@ -28,24 +28,24 @@ residence 是 籍贯的意思
     * PUT {id, username, password} -> {msg, status, user: {id, username, role}}
     * DELETE -> {msg, status}
 * `/api/student`
-  * GET -> {msg, status, students: [{id, name, studentId, majorInfo: {id, name, year}}, ...]}
-  * POST {name, studentId, majorId, idCardNumber, telNumber, email, residence, politicalStatus, signature}
-    -> {msg, status, student: {id, name, studentId, majorInfo: {id, name, year}, idCardNumber, telNumber, email, residence, politicalStatus, signature}}
+  * GET -> {msg, status, students: [{id, name, year, studentId, majorInfo: {id, name, year}}, ...]}
+  * POST {name, year, studentId, majorId, idCardNumber, telNumber, email, residence, politicalStatus, signature}
+    -> {msg, status, student: {id, name, year, studentId, majorInfo: {id, name, year}, idCardNumber, telNumber, email, residence, politicalStatus, signature}}
   * `/self` 代理给具体的 `/{id}`
   * `/{id}`
-    * GET -> {msg, status, student: {id, name, studentId, majorInfo: {id, name, year}, idCardNumber, telNumber, email, residence, politicalStatus, signature}}
-    * PUT {name, studentId, majorId, idCardNumber, telNumber, email, residence, politicalStatus, signature}
-      -> {msg, status, student: {id, name, studentId, majorInfo: {id, name, year}, idCardNumber, telNumber, email, residence, politicalStatus, signature}}
+    * GET -> {msg, status, student: {id, name, year, studentId, majorInfo: {id, name, year}, idCardNumber, telNumber, email, residence, politicalStatus, signature}}
+    * PUT {name, year, studentId, majorId, idCardNumber, telNumber, email, residence, politicalStatus, signature}
+      -> {msg, status, student: {id, name, year, studentId, majorInfo: {id, name, year}, idCardNumber, telNumber, email, residence, politicalStatus, signature}}
     * DELETE -> {msg, status}
 * `/api/teacher`
-  * GET -> {msg, status, teachers: [{id, name, teacherId, department: {id, name}}, ...]}
-  * POST {name, teacherId, departmentId, idCardNumber, telNumber, email, residence, politicalStatus, title, signature}
-    -> {msg, status, teacher: {id, name, teacherId, department: {id, name}, idCardNumber, telNumber, email, residence, politicalStatus, title, signature}}
+  * GET -> {msg, status, teachers: [{id, name, year, teacherId, department: {id, name}}, ...]}
+  * POST {name, year, teacherId, departmentId, idCardNumber, telNumber, email, residence, politicalStatus, title, signature}
+    -> {msg, status, teacher: {id, name, year, teacherId, department: {id, name}, idCardNumber, telNumber, email, residence, politicalStatus, title, signature}}
   * `/self` 代理给具体的 `/{id}`
   * `/{id}`
-    * GET -> {msg, status, teacher: {id, name, teacherId, department: {id, name}, idCardNumber, telNumber, email, residence, politicalStatus, title, signature}}
-    * PUT {name, teacherId, departmentId, idCardNumber, telNumber, email, residence, politicalStatus, title, signature}
-    -> {msg, status, teacher: {id, name, teacherId, department: {id, name}, idCardNumber, telNumber, email, residence, politicalStatus, title, signature}}
+    * GET -> {msg, status, teacher: {id, name, year, teacherId, department: {id, name}, idCardNumber, telNumber, email, residence, politicalStatus, title, signature}}
+    * PUT {name, year, teacherId, departmentId, idCardNumber, telNumber, email, residence, politicalStatus, title, signature}
+    -> {msg, status, teacher: {id, name, year, teacherId, department: {id, name}, idCardNumber, telNumber, email, residence, politicalStatus, title, signature}}
     * DELETE -> {msg, status}
 * `/api/admin`
   * GET -> {msg, status, admins: [{id, username, role}, ...]}

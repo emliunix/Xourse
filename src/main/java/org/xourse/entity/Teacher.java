@@ -13,12 +13,13 @@ public class Teacher extends User {
     {
         role = "teacher";
     }
-
+    @Column
+    private String year;
+    @Column
+    private String teacherId;
     @JsonIgnore
     @ManyToOne
     private Department department;
-    @Column
-    private String teacherId;
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     private TeacherProfile teacherProfile;
@@ -45,5 +46,13 @@ public class Teacher extends User {
 
     public void setTeacherProfile(TeacherProfile teacherProfile) {
         this.teacherProfile = teacherProfile;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
 }

@@ -13,7 +13,8 @@ public class TeacherInfo {
     public Integer id;
     public String name;
     public String teacherId;
-    public TeacherInfo(Teacher t) { id = t.getId(); name = t.getUsername(); teacherId = t.getTeacherId(); }
+    public String year;
+    public TeacherInfo(Teacher t) { id = t.getId(); name = t.getUsername(); teacherId = t.getTeacherId(); year = t.getYear(); }
 
     public static class WithDepartment extends TeacherInfo {
         public Department department;

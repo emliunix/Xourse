@@ -11,7 +11,8 @@ public class Student extends User {
     {
         role = "student";
     }
-
+    @Column
+    private String year;
     @Column
     private String studentId;
     @ManyToOne
@@ -41,5 +42,13 @@ public class Student extends User {
 
     public void setStudentProfile(StudentProfile studentProfile) {
         this.studentProfile = studentProfile;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
 }

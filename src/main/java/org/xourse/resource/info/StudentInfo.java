@@ -12,12 +12,14 @@ import org.xourse.entity.StudentProfile;
 public class StudentInfo {
     public Integer id;
     public String name;
+    public String year;
     public String studentId;
 
     public StudentInfo(Student s) {
         id = s.getId();
         name = s.getUsername();
         studentId = s.getStudentId();
+        year = s.getYear();
     }
     public static class WithClass extends StudentInfo {
         public MajorClassInfo classInfo;
