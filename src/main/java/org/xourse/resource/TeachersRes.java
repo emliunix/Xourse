@@ -74,7 +74,7 @@ public class TeachersRes {
             return MessageUtils.fail(e.getMessage());
         }
         Map<String, Object> m = MessageUtils.success();
-        m.put("teacher", new TeacherInfo.WithDepartment(submit.teacher));
+        m.put("teacher", new TeacherInfo.Detailed(submit.teacher));
         return m;
     }
 

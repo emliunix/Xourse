@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import org.xourse.entity.Department;
 import org.xourse.entity.Major;
 import org.xourse.entity.Teacher;
+import org.xourse.resource.info.MajorInfo;
+import org.xourse.resource.info.TeacherInfo;
 import org.xourse.service.DepartmentService;
 import org.xourse.utils.MessageUtils;
 
@@ -13,6 +15,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Departments Resource
@@ -107,9 +110,10 @@ public class DepartmentsRes {
         @Path("/majors")
         @GET
         public Map<String, Object> getMajors() {
-            List<Major> majors;
+            List<MajorInfo> majors;
             try {
-                majors = departmentService.getMajors(id);
+                majors = departmentService.getMajors(id).stream()
+                .map(MajorInfo::new).collect(Collectors.toList());
             } catch (Exception e) {
                 return MessageUtils.fail("failed");
             }
@@ -122,9 +126,10 @@ public class DepartmentsRes {
         @Path("/teachers")
         @GET
         public Map<String, Object> getTeachers() {
-            List<Teacher> teachers;
+            List<TeacherInfo> teachers;
             try {
-                teachers = departmentService.getTeachers(id);
+                teachers = departmentService.getTeachers(id).stream()
+                .map(TeacherInfo::new).collect(Collectors.toList());
             } catch (Exception e) {
                 return MessageUtils.fail(e.getMessage());
             }

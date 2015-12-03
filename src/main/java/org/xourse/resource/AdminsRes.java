@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * Created by Liu Yuhui on 2015/11/26.
  */
 @Component
-@Path("/admins")
+@Path("/admin")
 public class AdminsRes {
     @Autowired
     private UserService userService;

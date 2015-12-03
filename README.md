@@ -15,8 +15,46 @@
   
 ### 用户相关
 
-* `/api/me`
-  * GET -> {status, msg, user: {id, username, rolename, uilinks: [{name, url}, ... ]}}
+politicalStatus 是 政治形象的意思
+signature 是 个人签名的意思
+idCardNumber 是 身份证号的意思
+residence 是 籍贯的意思
+
+* `/api/user`
+  * GET -> {msg, status, users: [{id, username, role}, ... ]}
+  * `/self` 代理给当前登录的用户的具体用户类型的处理接口 `/api/<userType>/{id}`
+  * `/{id}`
+    * GET -> {msg, status, user: {id, username, role}}
+    * PUT {id, username, password} -> {msg, status, user: {id, username, role}}
+    * DELETE -> {msg, status}
+* `/api/student`
+  * GET -> {msg, status, students: [{id, name, studentId, majorInfo: {id, name, year}}, ...]}
+  * POST {name, studentId, majorId, idCardNumber, telNumber, email, residence, politicalStatus, signature}
+    -> {msg, status, student: {id, name, studentId, majorInfo: {id, name, year}, idCardNumber, telNumber, email, residence, politicalStatus, signature}}
+  * `/self` 代理给具体的 `/{id}`
+  * `/{id}`
+    * GET -> {msg, status, student: {id, name, studentId, majorInfo: {id, name, year}, idCardNumber, telNumber, email, residence, politicalStatus, signature}}
+    * PUT {name, studentId, majorId, idCardNumber, telNumber, email, residence, politicalStatus, signature}
+      -> {msg, status, student: {id, name, studentId, majorInfo: {id, name, year}, idCardNumber, telNumber, email, residence, politicalStatus, signature}}
+    * DELETE -> {msg, status}
+* `/api/teacher`
+  * GET -> {msg, status, teachers: [{id, name, teacherId, department: {id, name}}, ...]}
+  * POST {name, teacherId, departmentId, idCardNumber, telNumber, email, residence, politicalStatus, title, signature}
+    -> {msg, status, teacher: {id, name, teacherId, department: {id, name}, idCardNumber, telNumber, email, residence, politicalStatus, title, signature}}
+  * `/self` 代理给具体的 `/{id}`
+  * `/{id}`
+    * GET -> {msg, status, teacher: {id, name, teacherId, department: {id, name}, idCardNumber, telNumber, email, residence, politicalStatus, title, signature}}
+    * PUT {name, teacherId, departmentId, idCardNumber, telNumber, email, residence, politicalStatus, title, signature}
+    -> {msg, status, teacher: {id, name, teacherId, department: {id, name}, idCardNumber, telNumber, email, residence, politicalStatus, title, signature}}
+    * DELETE -> {msg, status}
+* `/api/admin`
+  * GET -> {msg, status, admins: [{id, username, role}, ...]}
+  * POST {username, password} -> {msg, status, admin: {id, username, role}}
+  * `/self` 代理给具体的 `/{id}`
+  * `/{id}`
+    * GET -> {msg, status, admin: {id, username, role}}
+    * PUT {username, password} -> {msg, status, admin: {id, username, role}}
+    * DELETE -> {msg, status}
 
 ### 教师功能
 
@@ -50,24 +88,47 @@
     
 ### 管理员功能
 
+管理员负责管理用户，课程，新闻。
+对课程的管理功能包括对必修和选修课程的添加。
+
+* `/compulsory`
+  * `/year`
+    * GET
+* `/elective`
+
 ### 学院，专业，班级数据
 
 * `/api/department`
-  * GET -> {status, msg, departments: [{id, name, links: { detail }}, ... ]}
+  * GET -> {status, msg, departments: [{id, name}, ... ]}
   * POST {name} -> {status, msg, department: {id, name}}
-* `/api/department/:id`
-  * GET -> {status, msg, department: {id, name, links: {majors, teachers}}} 
-  * PUT {id, name} -> {status, msg, department: {id, name}} 
-  * DELETE {id} -> {status, msg}
-* `/api/department/:id/majors`
-  * ***Unimplemented***
-* `/api/department/:id/teachers`
-  * ***Unimplemented***
-
+  * `/:id`
+    * GET -> {status, msg, department: {id, name}} 
+    * PUT {name} -> {status, msg, department: {id, name}} 
+    * DELETE -> {status, msg}
+    * `/majors`
+      * GET -> {msg, satus, majors: [{id, name}, ... ]}
+    * `/teachers`
+      * GET -> {msg, status, teachers: [{id, name, teacherId}, ... ]}
 * `/api/major`
-  * GET -> {status, msg, majors: [{id, name, detail}, ... ]}
-  * POST {name} -> {status, msg, department: {id, name}}
-* `/api/major/:id`
-  * GET -> {status, msg, major: {id, name, links: {department, classes}}}
-  * PUT {id, name} -> {status, msg, department: {id, name}} 
-  * DELETE {id} -> {status, msg}
+  * GET -> {status, msg, majors: [{id, name}, ... ]}
+  * POST {name, departmentId} -> {status, msg, major: {id, name, department: {id, name}}} // department.name 目前没有
+  * `/{id}`
+    * GET -> {status, msg, major: {id, name, department: {id, name}}}
+    * PUT {name， departmentId} -> {status, msg, major: {id, name, department: {id, name}}
+    * DELETE -> {status, msg}
+    * `/classes`
+      * GET -> {msg, status, majorClasses: [{id, name, year}, ... ]}
+* `/api/major_class`
+  * GET -> {msg, status, majorClasses: [{id, name, year}, ... ]}
+  * POST {majorId, year, name} -> {msg, status, majorClass: {id, name, year, major: {id, name, department}}} // major 目前只有id
+  * `/{id}`
+    * GET -> {msg, status, majorClass: {id, name, year, major: {id, name, department}}} // department 没有
+    * PUT {majorId, year, name} -> {msg, status, majorClass: {id, name, year, major: {id, name, department}}} // department 没有
+    * DELETE -> {msg, status}
+    * `/students`
+      * GET -> {msg, status, students: [{id, name, studentId}, ... ]}
+
+## 其他数据
+
+* `/year`
+  GET -> {msg, status, years: [year, ... ]}

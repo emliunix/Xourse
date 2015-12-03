@@ -21,10 +21,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * User resource
  * Created by Liu Yuhui on 2015/11/26.
  */
 @Component
-@Path("/users")
+@Path("/user")
 public class UsersRes {
     @Autowired
     private UserService userService;

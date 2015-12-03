@@ -142,7 +142,5 @@ public class MajorClassesRes {
             m.put("students", stus);
             return m;
         }
-
     }
-
 }

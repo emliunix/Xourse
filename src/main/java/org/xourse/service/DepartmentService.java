@@ -1,5 +1,6 @@
 package org.xourse.service;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +48,19 @@ public class DepartmentService {
     }
 
     public List<Major> getMajors(int id) {
-        Department d = (Department)getSession().get(Department.class, id);
+        Session sess = getSession();
+        Department d = (Department)sess.get(Department.class, id);
+        if(null == d)
+            return null;
+        Hibernate.initialize(d.getMajors());
         return d.getMajors();
     }
 
     public List<Teacher> getTeachers(int id) {
         Department d = (Department)getSession().get(Department.class, id);
+        if(null == d)
+            return null;
+        Hibernate.initialize(d.getTeachers());
         return d.getTeachers();
     }
 }
