@@ -98,6 +98,15 @@
 		border-radius:12px;
 		out-line:none;
 	}
+	.alert
+	{
+		font:normal bold 30px/40px "微软雅黑";
+		padding-top:35px;
+		padding-bottom: 35px;
+		color:white;
+		background:#31708f;
+		text-align:center;
+	}
 </style>
 <div style="width:100%;min-height:100%;background:#efefef">
 	<ul class="lhs-menu">
@@ -107,8 +116,8 @@
 			<div class="lhs-menu-right lhs-ml"></div>
 		</li>
 	</ul>
-	
-	<table class="wanted_sub_table" cellpadding="3" cellspacing="0" align="center">
+	<div class="alert" ng-hide="isModifiable">您已经提交了课程，不能再选了！</div>
+	<table class="wanted_sub_table" cellpadding="3" cellspacing="0" align="center" ng-show="isModifiable">
 		<tr>
 			<th width="60">编号</th>
 			<th width="160">课程名</th>
@@ -118,9 +127,9 @@
 		</tr>
 		<tr ng-repeat="sub in subs" ng-hide="isSelected[$index]">
 			<td>{{$index+1}}</td>
-			<td>{{sub.subject}}</td>
+			<td>{{sub.name}}</td>
 			<td>{{sub.teacher}}</td>
-			<td>{{sub.num}}</td>
+			<td>{{sub.seletedNum}}</td>
 			<td><md-checkbox aria-label="sub_check" class="md-secondary"ng-click="addSubItem($index)"></md-checkbox></td>
 		</tr>
 	</table>
@@ -128,7 +137,7 @@
 	<div class="alert_info" ng-if="selectedSub.length==0">
 		您现在还没有选择的课程!
 	</div>
-	<table class="selected_sub" cellpadding="3" align="center" ng-show="selectedSub.length>0">
+	<table class="selected_sub" cellpadding="3" align="center" ng-show="selectedSub.length>0 && isModifiable"">
 		<tr>
 			<th width="60">编号</th>
 			<th width="160">课程名</th>
@@ -137,7 +146,7 @@
 		</tr>
 		<tr ng-repeat="s in selectedSub">
 			<td>{{$index+1}}</td>
-			<td>{{s.subject}}</td>
+			<td>{{s.name}}</td>
 			<td>{{s.teacher}}</td>
 			<td>
 				<button  class="md-warn round" ng-click="removeFromSelected($index)">
@@ -147,7 +156,7 @@
 		</tr>
 		<tr>
 			<td colspan="4" style="padding-top:20px;background:none;">
-				<md-button class="md-primary md-raised submit-lhs">提交</md-button>
+				<md-button class="md-primary md-raised submit-lhs" ng-click="submit($event)" ng-show="isModifiable">提交</md-button>
 			</td>
 		</tr>
 	</table>

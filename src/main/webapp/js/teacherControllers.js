@@ -121,7 +121,7 @@ appControllers.controller('selectYearCtrl',['$scope','$location','$mdDialog',fun
 			
 		$location.path('/assessScore/'+$scope.selectedYear);
 	}
-}])
+}]);
 
 appControllers.controller('accessScoreCtrl',['$scope','$mdSidenav','$routeParams','$mdDialog','$location',function($scope,$mdSidenav,$routeParams,$mdDialog,$location){
 	/**获取选定的年份 */

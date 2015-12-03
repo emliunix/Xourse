@@ -23,7 +23,7 @@ appControllers.controller('pageCtrl',['$scope','$mdSidenav','$mdDialog',function
 			{'href':'#/welcome','text':'首页'},
 			{'href':'#/readnews','text':'查看新闻'},
 			{'href':'#/chooseSubject','text':'选课与退课'},
-			{'href':'#/querySubject','text':'查询课程信息'},
+			{'href':'#/stuselectYear','text':'查询课程信息'},
 			{'href':'#/ext/queryHubuScore','text':'查询湖大成绩'},
 			//教师部分
 			//{'href':'#/teachSubject','text':'公选课程选择'},

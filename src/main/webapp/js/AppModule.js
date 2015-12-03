@@ -20,10 +20,15 @@ myIndexPage.config(['$routeProvider','$mdIconProvider',function($routeProvider,$
 			templateUrl:'student/chooseSub.html',
 			controller:'chooseSubjectCtrl'
 		}).
-		when('/querySubject',{			//查询选课情况
+		when('/stuselectYear',{			//查询选课先选择年份
+			templateUrl:'student/stuselectYear.html',
+			controller:'stuselectYearCtrl'
+		}).
+		when('/querySubject/:year',{			//查询选课情况
 			templateUrl:'student/querySub.html',
 			controller:'querySubjectCtrl'
 		}).
+		
 		when('/ext/queryHubuScore',{      //查询湖大成绩
 			templateUrl:'student/queryHubuScore.html',
 			controller:'queryHubuScoreCtrl'
