@@ -15,9 +15,9 @@ public class Course {
     @Column
     private String name;
     @Column
-    private int regularRate = 60;
+    private Integer regularRate = 60;
     @Column
-    private int finalExamRate = 40;
+    private Integer finalExamRate = 40;
     @ManyToOne
     private Teacher teacher;
 
@@ -45,19 +45,19 @@ public class Course {
         this.name = name;
     }
 
-    public int getRegularRate() {
+    public Integer getRegularRate() {
         return regularRate;
     }
 
-    public void setRegularRate(int regularRate) {
+    public void setRegularRate(Integer regularRate) {
         this.regularRate = regularRate;
     }
 
-    public int getFinalExamRate() {
+    public Integer getFinalExamRate() {
         return finalExamRate;
     }
 
-    public void setFinalExamRate(int finalExamRate) {
+    public void setFinalExamRate(Integer finalExamRate) {
         this.finalExamRate = finalExamRate;
     }
 

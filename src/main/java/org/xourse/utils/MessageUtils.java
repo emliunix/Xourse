@@ -33,4 +33,7 @@ public class MessageUtils {
         return fail("failed");
     }
 
+    public static Map<String, Object> fail(Exception e) {
+        return fail(e.getClass().getName() + ": " + e.getMessage());
+    }
 }

@@ -14,37 +14,59 @@
 </head>
 
 <body ng-cloak>
-  <ul>
-    <li ng-repeat="user in users">
-      {{user.id}}: {{user.username}} -- {{user.role}}
-    </li>
-  </ul>
+    <md-button class="md-raised" ng-click="func()" aria-label="btn">Button</md-button>
+    <md-content>
+        <h2>Alter User</h2>
+        <md-input ng-model="u_id"></md-input>
+        <md-input ng-model="u_username"></md-input>
+        <md-buttonn class="md-raised" ng-click="update()"></md-buttonn>
+    </md-content>
+    <ul>
+        <li ng-repeat="user in users">
+            {{user.id}}-{{user.username}}-{{user.role}}-{{user.password}}
+        </li>
+    </ul>
 
-  <script src="front_frame/angular/angular.js"></script>
-  <script src="front_frame/angular/angular-resource.js"></script>
-  <script src="front_frame/angular/angular-animate.js"></script>
-  <script src="front_frame/angular/angular-route.js"></script>
-  <script src="front_frame/angular/angular-aria.js"></script>
-  <script src="front_frame/angular/angular-messages.js"></script>
-  <script src="front_frame/angular-material/angular-material.js"></script>
+    <script src="front_frame/angular/angular.js"></script>
+    <script src="front_frame/angular/angular-resource.js"></script>
+    <script src="front_frame/angular/angular-animate.js"></script>
+    <script src="front_frame/angular/angular-route.js"></script>
+    <script src="front_frame/angular/angular-aria.js"></script>
+    <script src="front_frame/angular/angular-messages.js"></script>
+    <script src="front_frame/angular-material/angular-material.js"></script>
 
-  <script>
-    var app = angular.module("app", ["ngMaterial", "ngResource"]);
-    app.controller("ctrl", ["$resource", "$scope", function($resource, $scope) {
-      var User = $resource("http://localhost:8080/api/user/:id", {"id": "@id"}, {
-        "get": {method: "GET", isArray: true, transformResponse: function(data, header) {
-          var d = angular.fromJson(data);
-          if(d.status === true) {
-            d = d.users;
-            return d;
-          }
-          return null;
-        }}
-      });
-      $scope.users = User.get();
-    }]);
-  </script>
+    <script>
 
+        function apiAccessorGenerator(field) {
+            return function(data, header) {
+                var d = angular.fromJson(data);
+                if(d.status === true) {
+                  d = d[field];
+                  return d;
+                }
+                return null;
+            }
+        }
+
+        var app = angular.module("app", ["ngMaterial", "ngResource"]);
+        app.controller("ctrl", ["$resource", "$scope", function($resource, $scope) {
+            var User = $resource("http://localhost:8080/StudentManage/api/user/:id", {"id": "@id"}, {
+                "query": {method: "GET", isArray: true, transformResponse: apiAccessorGenerator("users")},
+                "save": {method: "POST", isArray: false, transformRequest: []},
+                "get": {method: "GET", isArray: false, transformResponse: apiAccessorGenerator("user")},
+                "update": {method: "PUT", isArray: false, transformRequest: []},
+                "delete": {method: "DELETE", isArray: false, transformRequest: []},
+            });
+            $scope.users = User.query();
+            $scope.users.$promise.then(function (value) {
+                console.log(value);
+            }, function (reason) {
+                console.log(reason);
+            });
+            $scope.func = function() {
+                console.log("Hello world!!!");
+            }
+        }]);
+    </script>
 </body>
-
 </html>

@@ -20,6 +20,11 @@ public class Student extends User {
     @OneToOne(cascade = CascadeType.ALL)
     private StudentProfile studentProfile;
 
+    public Student() { }
+    public Student(int id) {
+        setId(id);
+    }
+
     public MajorClass getMajorClass() {
         return majorClass;
     }

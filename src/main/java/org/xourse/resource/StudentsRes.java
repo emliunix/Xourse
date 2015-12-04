@@ -1,14 +1,15 @@
 package org.xourse.resource;
 
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.xourse.AccessDeniedException;
-import org.xourse.entity.MajorClass;
-import org.xourse.entity.Student;
-import org.xourse.entity.StudentProfile;
-import org.xourse.entity.User;
+import org.xourse.entity.*;
 import org.xourse.resource.info.StudentInfo;
+import org.xourse.service.CourseService;
 import org.xourse.service.UserService;
 import org.xourse.utils.MessageUtils;
 import org.xourse.utils.SessionUtils;
@@ -17,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,10 +31,10 @@ import java.util.stream.Collectors;
 @Component
 @Path("/student")
 public class StudentsRes {
-
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private CourseService courseService;
     @Context
     private HttpServletRequest request;
 
@@ -97,14 +100,14 @@ public class StudentsRes {
         return new StudentRes(Integer.valueOf(id));
     }
 
-        public class StudentRes {
-            private int id;
+    public class StudentRes {
+        private int id;
 
-            public StudentRes(int id) {
-                this.id = id;
-            }
+        public StudentRes(int id) {
+            this.id = id;
+        }
 
-            @GET
+        @GET
         @Produces(MediaType.APPLICATION_JSON)
         public Map<String, Object> get() {
             Student s;
@@ -161,5 +164,84 @@ public class StudentsRes {
             }
             return MessageUtils.success();
         }
+
+
+        @Path("/elective_classes/year")
+        @GET
+        @Produces(MediaType.APPLICATION_JSON)
+        public Map<String, Object> getElectiveYears() {
+            List<String> years;
+            try {
+                years = courseService.findAllElectiveYears();
+            } catch (Exception e) {
+                return MessageUtils.fail(e);
+            }
+            Map<String, Object> m = MessageUtils.success();
+            m.put("years", years);
+            return m;
+        }
+
+        @Path("/elective_classes/year/{year : \\d+}")
+        @GET
+        @Produces(MediaType.APPLICATION_JSON)
+        public Map<String, Object> getElective(@PathParam("year")String year) {
+            List<ElectiveCourse> courses;
+            // when year is optional, figure out a value according to current date
+            if (null == year) {
+                Calendar c = Calendar.getInstance();
+                int n_year = c.get(Calendar.YEAR);
+                int n_month = c.get(Calendar.MONTH);
+                if (n_month >= 6) {
+                    year = Integer.toString(n_year) + "-" + Integer.toString(n_year + 1);
+                } else {
+                    year = Integer.toString(n_year - 1) + "-" + Integer.toString(n_year);
+                }
+            }
+            StudentState state;
+            try {
+                Student s = new Student(id);
+                state = courseService.findStudentState(s, year);
+                courses = courseService.findElectiveByYear(year);
+            } catch (Exception e) {
+                return MessageUtils.fail(e.getMessage());
+            }
+            Map<String, Object> m = MessageUtils.success();
+            m.put("isModifiable", null == state ? true : state.getModifiable());
+            m.put("courses", courses);
+            return m;
+        }
+
+        @Path("/elective_classes/year/{year : \\d{4}-\\d{4}}")
+        @POST
+        @Produces(MediaType.APPLICATION_JSON)
+        public Map<String, Object> postElective(List<IdCollector> ids) {
+            return null;
+        }
+
+        @Path("/courses/year")
+        @GET
+        @Produces(MediaType.APPLICATION_JSON)
+        public Map<String, Object> getCourseYears() {
+            return null;
+        }
+
+        @Path("/courses")
+        @GET
+        @Produces(MediaType.APPLICATION_JSON)
+        public Map<String, Object> getCourses() {
+            return null;
+        }
+
+        @Path("/courses/year/{year : \\d{4}-\\d{4}}")
+        @GET
+        @Produces(MediaType.APPLICATION_JSON)
+        public Map<String, Object> getCoursesOfYear(@PathParam("year")String year) {
+            return MessageUtils.success(year);
+        }
+
+    }
+
+    public static class IdCollector {
+        public Integer id;
     }
 }

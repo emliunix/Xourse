@@ -1,5 +1,7 @@
 package org.xourse.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.List;
  */
 @Entity
 public class ElectiveCourse extends Course {
+    @JsonIgnore
     @OneToMany(mappedBy = "course")
     private List<ElectiveCourseRegistration> registrations = new ArrayList<>(0);
 
