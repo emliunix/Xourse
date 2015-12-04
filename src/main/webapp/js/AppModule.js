@@ -54,7 +54,12 @@ myIndexPage.config(['$routeProvider','$mdIconProvider',function($routeProvider,$
 			templateUrl:'teacher/calculateScore.html',
 			controller:'calScoreCtrl'
 		}).
+		/*****管理员******/
+		when('/newsmanage',{        	   //管理员管理新闻
+			templateUrl:'admin/newsmanage.html',
+			controller:'newsmanageCtrl'
+		}).
 		otherwise({
 			redirectTo:'/welcome'
-		});				
+		});			
 }]);

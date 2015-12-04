@@ -25,10 +25,12 @@ appControllers.controller('pageCtrl',['$scope','$mdSidenav','$mdDialog',function
 			{'href':'#/chooseSubject','text':'选课与退课'},
 			{'href':'#/stuselectYear','text':'查询课程信息'},
 			{'href':'#/ext/queryHubuScore','text':'查询湖大成绩'},
-			//教师部分
+			//教师部分(也包括首页和查看新闻)
 			//{'href':'#/teachSubject','text':'公选课程选择'},
 			{'href':'#/teachSubject','text':'公选课程选择'},
-			{'href':'#/selectYear','text':'成绩结算'}
+			{'href':'#/selectYear','text':'成绩结算'},
+			//管理员部分
+			{'href':'#/newsmanage','text':'新闻管理'}
 		];
 
 		$scope.openLeftMenu =function(){

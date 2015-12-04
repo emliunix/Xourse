@@ -1,0 +1,39 @@
+<md-dialog aria-label="selectRate"  ng-cloak>
+  <form>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>添加新闻</h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="cancel($event)">
+        <md-icon md-svg-src="front_frame/angular-material/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content style="max-width:800px;max-height:810px;min-width:600px; ">
+    <div class="md-dialog-content" style="font-weight:bold;">
+        <md-input-container class="md-block">
+          <label for="input_15">标题：</label>
+          <input ng-model="title" required="" />
+        </md-input-container> 
+  
+        <md-datepicker ng-model="myDate" md-placeholder="请输入时间" required=""></md-datepicker>
+  
+        <md-input-container class="md-block">
+          <label for="input_17">内容：</label>
+          <textarea ng-model="content" required="" ></textarea>
+        </md-input-container> 
+    </div>
+  </md-dialog-content>
+  <div class="md-actions" layout="row">
+    <span flex></span>
+    <md-button ng-click="ok($event)"  class="md-raised md-accent" style="margin-right:20px;" >
+      确定
+    </md-button>
+  </div>
+  </form>
+</md-dialog>
+
+
+
+
+

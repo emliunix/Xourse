@@ -47,7 +47,7 @@ appControllers.controller('chooseSubjectCtrl',['$scope','$timeout','$mdDialog',f
   
 // * `/elective_courses` "学生查看选修课，选择选修课"
 //   * GET -> {status, msg, isModifiable, courses: [{id, year, name, type, department, teacher,selectedNum}, ... ]}
-//   * POST [{action, id}, ... ] -> {status, msg}
+//   * POST {data:[{id, year, name, type, department, teacher,selectedNum}, ... ]} -> {status, msg}
 
 	$scope.isModifiable=true;
 	$.ajax({
@@ -122,7 +122,8 @@ appControllers.controller('chooseSubjectCtrl',['$scope','$timeout','$mdDialog',f
 				$.ajax({
 					type:'post',
 					url:'/StudentManage/api/student/elective_courses',
-					data:{data:JSON.stringify($scope.selectedSub)},
+					data:JSON.stringify($scope.selectedSub),
+					contentType: "application/json",
 					success:function(result){
 						var j=$.parseJSON(result);
 						if(j.status){
@@ -137,6 +138,7 @@ appControllers.controller('chooseSubjectCtrl',['$scope','$timeout','$mdDialog',f
 						$scope.isModifiable=false;
 					}
 				});
+				
 			}, function() {
 
 			});
