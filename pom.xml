@@ -237,7 +237,7 @@
     </dependencyManagement>
 
    <build>
-        <finalName>web</finalName>
+        <finalName>StudentManage</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
