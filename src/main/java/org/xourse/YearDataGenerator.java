@@ -7,7 +7,8 @@ package org.xourse;
 public class YearDataGenerator {
     public static void main(String[] args) {
         for(int i = 2001; i < 2020; ++i) {
-            System.out.println("\"" + Integer.toString(i) + "-" + Integer.toString(i + 1) + "\",");
+            System.out.println("\"" + Integer.toString(i) + "-" + Integer.toString(i + 1) + "-1\",");
+            System.out.println("\"" + Integer.toString(i) + "-" + Integer.toString(i + 1) + "-2\",");
         }
     }
 }
