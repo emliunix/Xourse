@@ -14,6 +14,8 @@ public class StudentProfile {
     @GeneratedValue
     private int id;
     @Column
+    private String gender;
+    @Column
     private String idCardNumber;
     @Column
     private String telNumber;
@@ -25,6 +27,25 @@ public class StudentProfile {
     private String politicalStatus;
     @Column
     private String signature;
+
+    public StudentProfile() {
+    }
+
+    public StudentProfile(String gender,
+                          String idCardNumber,
+                          String telNumber,
+                          String email,
+                          String residence,
+                          String politicalStatus,
+                          String signature) {
+        this.gender = gender;
+        this.idCardNumber = idCardNumber;
+        this.telNumber = telNumber;
+        this.email = email;
+        this.residence = residence;
+        this.politicalStatus = politicalStatus;
+        this.signature = signature;
+    }
 
     public int getId() {
         return id;
@@ -80,5 +101,13 @@ public class StudentProfile {
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

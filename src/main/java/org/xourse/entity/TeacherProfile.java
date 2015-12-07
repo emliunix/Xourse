@@ -14,6 +14,8 @@ public class TeacherProfile {
     @GeneratedValue
     private int id;
     @Column
+    private String gender;
+    @Column
     private String idCardNumber;
     @Column
     private String telNumber;
@@ -90,5 +92,13 @@ public class TeacherProfile {
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

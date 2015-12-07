@@ -11,12 +11,19 @@ public class StudentState {
     @Id
     @GeneratedValue
     private Integer id;
-    @Column
+    @Column(nullable = false)
     private String year;
     @Column
-    private Boolean modifiable;
-    @OneToOne
+    private Boolean modifiable = true;
+    @ManyToOne(optional = false)
     private Student student;
+
+    public StudentState() { }
+
+    public StudentState(Student s, String year) {
+        this.student = s;
+        this.year = year;
+    }
 
     public Integer getId() {
         return id;

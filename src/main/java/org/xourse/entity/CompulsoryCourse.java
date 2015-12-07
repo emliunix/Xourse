@@ -12,7 +12,18 @@ public class CompulsoryCourse extends Course {
     @ManyToOne
     private MajorClass majorClass;
     @OneToMany(mappedBy = "course")
-    private List<CompulsoryCourseRegistration> registrations = new ArrayList<>(0);
+    private List<CourseRegistration> registrations = new ArrayList<>(0);
+
+    public CompulsoryCourse() { }
+
+    public CompulsoryCourse(int id) {
+        setId(id);
+    }
+
+    public CompulsoryCourse(String name, String year) {
+        setName(name);
+        setYear(year);
+    }
 
     public MajorClass getMajorClass() {
         return majorClass;
@@ -22,11 +33,11 @@ public class CompulsoryCourse extends Course {
         this.majorClass = majorClass;
     }
 
-    public List<CompulsoryCourseRegistration> getRegistrations() {
+    public List<CourseRegistration> getRegistrations() {
         return registrations;
     }
 
-    public void setRegistrations(List<CompulsoryCourseRegistration> registrations) {
+    public void setRegistrations(List<CourseRegistration> registrations) {
         this.registrations = registrations;
     }
 }

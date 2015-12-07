@@ -15,14 +15,34 @@ public class Student extends User {
     private String year;
     @Column
     private String studentId;
+    @Column
+    private String name;
     @ManyToOne
     private MajorClass majorClass;
     @OneToOne(cascade = CascadeType.ALL)
     private StudentProfile studentProfile;
 
     public Student() { }
+
     public Student(int id) {
         setId(id);
+    }
+
+    public Student(String studentId, String name, String year,
+                   String gender,
+                   String idCardNumber,
+                   String telNumber,
+                   String email,
+                   String residence,
+                   String politicalStatus,
+                   String signature) {
+
+        this.studentId = studentId;
+        this.setUsername(studentId);
+        this.name = name;
+        this.year = year;
+        StudentProfile profile = new StudentProfile(gender, idCardNumber, telNumber, email, residence, politicalStatus, signature);
+        this.studentProfile = profile;
     }
 
     public MajorClass getMajorClass() {
@@ -55,5 +75,13 @@ public class Student extends User {
 
     public void setYear(String year) {
         this.year = year;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -25,6 +25,12 @@ public class Major {
     @Column
     private List<MajorClass> classes = new ArrayList<>(0);
 
+    public Major() { }
+
+    public Major(String name) {
+        this.name = name;
+    }
+
     public Integer getId() {
         return id;
     }

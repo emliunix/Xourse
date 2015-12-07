@@ -17,6 +17,15 @@ public class CoursePlan {
     @Column
     private CourseType type;
 
+    public CoursePlan() {
+
+    }
+
+    public CoursePlan(String name, CourseType type) {
+        this.name = name;
+        this.type = type;
+    }
+
     public int getId() {
         return id;
     }

@@ -25,6 +25,13 @@ public class Department {
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     private List<Teacher> teachers;
 
+    public Department() {
+    }
+
+    public Department(String name) {
+        this.name = name;
+    }
+
     public Integer getId() {
         return id;
     }

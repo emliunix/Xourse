@@ -6,16 +6,16 @@ import javax.persistence.*;
  * Created by Liu Yuhui on 2015/11/28.
  */
 @Entity
-public class CompulsoryCourseRegistration {
+public class CourseRegistration {
     @Id
     @GeneratedValue
     private Integer id;
     @Column
-    private Double regularGrade;
+    private String regularGrade = "-";
     @Column
-    private Double finalExamGrade;
+    private String finalExamGrade = "-";
     @ManyToOne
-    private CompulsoryCourse course;
+    private Course course;
     @ManyToOne
     private Student student;
 
@@ -27,27 +27,27 @@ public class CompulsoryCourseRegistration {
         this.id = id;
     }
 
-    public Double getRegularGrade() {
+    public String getRegularGrade() {
         return regularGrade;
     }
 
-    public void setRegularGrade(Double regularGrade) {
+    public void setRegularGrade(String regularGrade) {
         this.regularGrade = regularGrade;
     }
 
-    public Double getFinalExamGrade() {
+    public String getFinalExamGrade() {
         return finalExamGrade;
     }
 
-    public void setFinalExamGrade(Double finalExamGrade) {
+    public void setFinalExamGrade(String finalExamGrade) {
         this.finalExamGrade = finalExamGrade;
     }
 
-    public CompulsoryCourse getCourse() {
+    public Course getCourse() {
         return course;
     }
 
-    public void setCourse(CompulsoryCourse course) {
+    public void setCourse(Course course) {
         this.course = course;
     }
 

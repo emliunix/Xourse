@@ -27,6 +27,14 @@ public class MajorClass {
     @OneToMany(mappedBy = "majorClass", fetch = FetchType.LAZY)
     private List<Student> students = new ArrayList<>();
 
+    public MajorClass() {
+    }
+
+    public MajorClass(String name, String year) {
+        this.name = name;
+        this.year = year;
+    }
+
     public Integer getId() {
         return id;
     }

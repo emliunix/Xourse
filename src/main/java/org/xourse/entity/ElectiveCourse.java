@@ -13,13 +13,24 @@ import java.util.List;
 public class ElectiveCourse extends Course {
     @JsonIgnore
     @OneToMany(mappedBy = "course")
-    private List<ElectiveCourseRegistration> registrations = new ArrayList<>(0);
+    private List<CourseRegistration> registrations = new ArrayList<>(0);
 
-    public List<ElectiveCourseRegistration> getRegistrations() {
+    public ElectiveCourse() { }
+
+    public ElectiveCourse(int id) {
+        setId(id);
+    }
+
+    public ElectiveCourse(String name, String year) {
+        setName(name);
+        setYear(year);
+    }
+
+    public List<CourseRegistration> getRegistrations() {
         return registrations;
     }
 
-    public void setRegistrations(List<ElectiveCourseRegistration> registrations) {
+    public void setRegistrations(List<CourseRegistration> registrations) {
         this.registrations = registrations;
     }
 }

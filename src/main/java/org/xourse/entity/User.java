@@ -1,5 +1,6 @@
 package org.xourse.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
@@ -30,7 +31,7 @@ public class User {
     @Column(name = "username", nullable = false)
     private String username;
 
-    //@JsonIgnore
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 

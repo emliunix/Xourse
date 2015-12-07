@@ -17,12 +17,20 @@ public class Teacher extends User {
     private String year;
     @Column
     private String teacherId;
+    @Column
+    private String name;
     @JsonIgnore
     @ManyToOne
     private Department department;
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     private TeacherProfile teacherProfile;
+
+    public Teacher() { }
+
+    public Teacher(int id) {
+        setId(id);
+    }
 
     public Department getDepartment() {
         return department;
@@ -54,5 +62,13 @@ public class Teacher extends User {
 
     public void setYear(String year) {
         this.year = year;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
