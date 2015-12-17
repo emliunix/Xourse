@@ -37,7 +37,7 @@ public class LinkRes {
     };
     private static final Link[] ADMIN_LINKS = new Link[] {
             new Link("#/newsmanage", "新闻管理"),
-            new Link("#/usermanage", "用户管理"),
+//            new Link("#/usermanage", "用户管理"),
             new Link("#/departmentmanage", "院系管理"),
             new Link("#/majormanage", "专业管理"),
             new Link("#/majorclassmanage", "行政班级管理"),
