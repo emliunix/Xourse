@@ -14,6 +14,8 @@ public class CourseRegistration {
     private String regularGrade = "-";
     @Column
     private String finalExamGrade = "-";
+    @Column
+    private String finalGrade = "-";
     @ManyToOne
     private Course course;
     @ManyToOne
@@ -57,5 +59,13 @@ public class CourseRegistration {
 
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    public String getFinalGrade() {
+        return finalGrade;
+    }
+
+    public void setFinalGrade(String finalGrade) {
+        this.finalGrade = finalGrade;
     }
 }

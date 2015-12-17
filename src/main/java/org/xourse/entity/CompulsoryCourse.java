@@ -14,6 +14,8 @@ public class CompulsoryCourse extends Course {
     @OneToMany(mappedBy = "course")
     private List<CourseRegistration> registrations = new ArrayList<>(0);
 
+    public final String type = "必修课程";
+
     public CompulsoryCourse() { }
 
     public CompulsoryCourse(int id) {

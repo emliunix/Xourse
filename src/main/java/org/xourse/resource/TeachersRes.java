@@ -4,19 +4,21 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xourse.AccessDeniedException;
-import org.xourse.entity.Department;
-import org.xourse.entity.Teacher;
-import org.xourse.entity.TeacherProfile;
-import org.xourse.entity.User;
+import org.xourse.entity.*;
+import org.xourse.resource.info.StuRegInfo;
 import org.xourse.resource.info.TeacherInfo;
+import org.xourse.service.CourseService;
 import org.xourse.service.UserService;
 import org.xourse.utils.MessageUtils;
 import org.xourse.utils.SessionUtils;
+import org.xourse.utils.TaskRunner;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,9 +33,12 @@ public class TeachersRes {
 
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private CourseService courseService;
     @Context
     private HttpServletRequest request;
+
+    private TaskRunner<Map<String, Object>> taskRunner = new TaskRunner<>();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -164,5 +169,139 @@ public class TeachersRes {
             }
             return MessageUtils.success();
         }
+
+        /**
+         * get elective courses
+         * @return
+         */
+        @Path("/elective_courses")
+        @GET
+        @Produces(MediaType.APPLICATION_JSON)
+        public Map<String, Object> getElective() {
+            List<CoursePlan> courses = null;
+            List<ElectiveCourse> electives = null;
+            boolean isModifiable = true;
+            Calendar c = Calendar.getInstance();
+            int nyear = c.get(Calendar.YEAR);
+            String year;
+            if(c.get(Calendar.MONTH) >= 6)
+                year = Integer.toString(nyear) + "-" + Integer.toString(nyear + 1) + "-1";
+            else
+                year = Integer.toString(nyear - 1) + "-" + Integer.toString(nyear) + "-2";
+            try {
+                Teacher t = new Teacher(id);
+                isModifiable = courseService.isTeacherModifiable(t, year);
+                if(isModifiable)
+                    courses = courseService.findAllElectivePlan();
+                else
+                    electives = courseService.findElectiveByTeacher(t);
+            } catch (Exception e) {
+                return MessageUtils.fail(e);
+            }
+            Map<String, Object> m = MessageUtils.success();
+            m.put("isSubmitted", !isModifiable);
+            if(isModifiable)
+                m.put("courses", courses);
+            else
+                m.put("courses", electives);
+            return m;
+        }
+
+        /**
+         * save elective course selections
+         * @return
+         */
+        @Path("/elective_courses")
+        @POST
+        @Produces(MediaType.APPLICATION_JSON)
+        public Map<String, Object> saveElectiveSelection(TeacherElectiveSubmit submit) {
+            if(null == submit || null == submit.year)
+                return MessageUtils.fail("invalid submit or year is not specified");
+            try {
+                Teacher t = new Teacher(id);
+                courseService.teaSignForElectives(t, submit.courses, submit.year);
+            } catch (Exception e) {
+                return MessageUtils.fail(e);
+            }
+            return MessageUtils.success();
+        }
+
+        @Path("/courses/year")
+        @GET
+        @Produces(MediaType.APPLICATION_JSON)
+        public Map<String, Object> getCourseYears() {
+            Teacher t = new Teacher(id);
+            List<String> years;
+            try {
+                years = courseService.findAllCourseYears(t);
+            } catch (Exception e) {
+                return MessageUtils.fail(e);
+            }
+            Map<String, Object> m = MessageUtils.success();
+            m.put("years", years);
+            return m;
+        }
+
+        @Path("/courses/year/{year : \\d{4}-\\d{4}-[12]}")
+        @GET
+        @Produces(MediaType.APPLICATION_JSON)
+        public Map<String, Object> getCoursesOfYear(@PathParam("year")String year) {
+            Teacher t = new Teacher(id);
+            return taskRunner.run(() -> {
+                Map<String, Object> m = MessageUtils.success();
+                List<Course> courses = courseService.findCoursesByTeacherAndYear(t, year);
+                m.put("courses", courses);
+                return m;
+            }, MessageUtils::fail);
+        }
+
+
+        @Path("/courses/{cid : \\d+}")
+        @GET
+        @Produces(MediaType.APPLICATION_JSON)
+        public Map<String, Object> getRegistrationsOfCourse(@PathParam("cid")String cid) {
+            return taskRunner.run(() -> {
+                int _cid = 0;
+                try {
+                    _cid = Integer.valueOf(cid);
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("cid is not valid: " + cid);
+                }
+                Map<String, Object> m = MessageUtils.success();
+                Course c = courseService.findById(_cid);
+                List<CourseRegistration> regs = courseService.findRegistrations(c);
+                List<StuRegInfo> regInfos = regs.stream().map(StuRegInfo::new).collect(Collectors.toList());
+                m.put("course", c);
+                m.put("registrations", regInfos);
+                return m;
+            }, MessageUtils::fail);
+        }
+
+        @Path("/courses/{cid : \\d+}")
+        @POST
+        @Produces(MediaType.APPLICATION_JSON)
+        @Consumes(MediaType.APPLICATION_JSON)
+        public Map<String, Object> postScores(@PathParam("cid")String cid, List<StuRegInfo> regs) {
+            return taskRunner.run(() -> {
+                int _cid = 0;
+                try {
+                    _cid = Integer.valueOf(cid);
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("cid is not valid: " + cid);
+                }
+
+                Map<String, Object> m = MessageUtils.success();
+                Course c = new Course();
+                c.setId(_cid);
+                courseService.setCourseFinished(c);
+                courseService.updateScores(c, regs);
+                return m;
+            }, MessageUtils::fail);
+        }
+    }
+
+    public static class TeacherElectiveSubmit {
+        public String year;
+        public List<Integer> courses;
     }
 }

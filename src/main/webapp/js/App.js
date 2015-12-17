@@ -33,6 +33,16 @@ appControllers.controller('pageCtrl',['$scope','$mdSidenav','$mdDialog',function
 			{'href':'#/newsmanage','text':'新闻管理'}
 		];
 
+	$.ajax({
+		url: "api/link",
+		method: "get"
+	}).then(function(data) {
+		var data = angular.fromJson(data);
+		if(data.status) {
+			$scope.menu = data.links;
+		}
+	});
+
 		$scope.openLeftMenu =function(){
 			$mdSidenav('left').toggle();
 		};
@@ -206,9 +216,10 @@ appControllers.controller('pageCtrl',['$scope','$mdSidenav','$mdDialog',function
 	$scope.logout=function(ev){
 		$.ajax({
 			type:'get',
-			url:'/StudentManage/sys/logout',
+			url:'sys/logout',
 			success:function(result){
-				var json=$.parseJSON(result);
+				//var json=$.parseJSON(result);
+				var json = result;
 				if(json.status)
 					window.location.href="login.html";
 				else{
@@ -217,7 +228,7 @@ appControllers.controller('pageCtrl',['$scope','$mdSidenav','$mdDialog',function
 			},
 			error:function(result){
 				openDialog(ev,'系统忙，请稍后再试！');
-			}			
+			}
 		});
 	}
 	
@@ -231,7 +242,6 @@ appControllers.controller('pageCtrl',['$scope','$mdSidenav','$mdDialog',function
 				.ok('确定')
 				.targetEvent(ev))
 	}
-		
 }]);
 
 //欢迎界面

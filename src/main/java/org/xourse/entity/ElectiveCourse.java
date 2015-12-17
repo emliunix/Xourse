@@ -15,6 +15,8 @@ public class ElectiveCourse extends Course {
     @OneToMany(mappedBy = "course")
     private List<CourseRegistration> registrations = new ArrayList<>(0);
 
+    public final String type = "选修课程";
+
     public ElectiveCourse() { }
 
     public ElectiveCourse(int id) {

@@ -13,12 +13,12 @@
     <div class="md-dialog-content" style="font-weight:bold;">
       <md-input-container class="md-block">
         <label>请输入平时分比例：(单位：%)</label>
-          <input ng-model="averScore" name="rate" class="score_input" type="number" min="0" max="100" required/>
+          <input ng-model="averScore" name="rate" class="score_input" type="number" min="0" max="100" ng-change="examScore = 100 - averScore" value="40" required/>
       </md-input-container>
 
       <md-input-container class="md-block">
         <label>卷面分比例：(单位：%)</label>
-        <input ng-model="examScore" name="rate" class="score_input" type="number" min="0" max="100" required/>
+        <input ng-model="examScore" name="rate" class="score_input" type="number" min="0" max="100" ng-change="averScore = 100 - examScore" value="60" required/>
       </md-input-container> 
     </div>
   </md-dialog-content>

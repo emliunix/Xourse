@@ -116,6 +116,14 @@ public class DBSetup {
             }
         }
 
+        CoursePlan cp1 = new CoursePlan("篮球", CoursePlan.CourseType.ELECTIVE);
+        CoursePlan cp2 = new CoursePlan("羽毛球", CoursePlan.CourseType.ELECTIVE);
+        CoursePlan cp3 = new CoursePlan("健美操", CoursePlan.CourseType.ELECTIVE);
+
+        session.save(cp1);
+        session.save(cp2);
+        session.save(cp3);
+
         session.flush();
         session.getTransaction().commit();
     }

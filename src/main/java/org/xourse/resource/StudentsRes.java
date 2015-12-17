@@ -211,10 +211,16 @@ public class StudentsRes {
             return m;
         }
 
-        @Path("/elective_classes/year/{year : \\d{4}-\\d{4}}")
+        @Path("/elective_classes")
         @POST
         @Produces(MediaType.APPLICATION_JSON)
-        public Map<String, Object> postElective(List<IdCollector> ids) {
+        public Map<String, Object> postElective(ElectiveSubmit submit) {
+            Student s = new Student(id);
+            try {
+                courseService.stuSignForElectives(s, submit.courses, submit.year);
+            } catch (Exception e) {
+                return MessageUtils.fail(e);
+            }
             return null;
         }
 
@@ -238,10 +244,10 @@ public class StudentsRes {
         public Map<String, Object> getCoursesOfYear(@PathParam("year")String year) {
             return MessageUtils.success(year);
         }
-
     }
 
-    public static class IdCollector {
-        public Integer id;
+    public static class ElectiveSubmit {
+        public List<Integer> courses;
+        public String year;
     }
 }

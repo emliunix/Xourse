@@ -112,7 +112,7 @@
 				<th width="165">平时成绩</th>
 				<th width="165">卷面成绩</th>
 				<th width="150">总成绩</th>
-				<th width="130">操作</th>
+				<th width="130"><md-icon md-svg-icon="announcement" ng-click="canEdit($event)"></md-icon></th>
 			</tr>
 			<tr ng-repeat="stu in students" align="center">
 				<td>{{stu.id}}</td>
@@ -124,14 +124,26 @@
 					<span ng-show="isNumError[$index]" style="color:red;font-weight:bold;">请输入数字!</span>
 					<span ng-show="isOverRange[$index]" style="color:red;font-weight:bold;">输入0-100间的数字!</span>
 				</td>
-				<td> 
-					<md-icon md-svg-icon="announcement" ng-click="canEdit($event)"></md-icon>
+				<td>
+
 				</td>
+				<!--<td>{{stu.id}}</td>
+				<td>{{stu.name}}</td>
+				<td><input class="score_in" ng-show="isVisible" ng-model="stu.regularGrade" ng-change="stu.finalGrade = calScore($index)"><span ng-show="!isVisible">{{p[$index]}}</span></td>
+				<td><input class="score_in" ng-show="isVisible" ng-model="j[$index]" ng-change="stu.finalGrade = calScore($index)"><span ng-show="!isVisible">{{j[$index]}}</span></td>
+				<td>
+					<span>{{z[$index]}}</span>
+					<span ng-show="isNumError[$index]" style="color:red;font-weight:bold;">请输入数字!</span>
+					<span ng-show="isOverRange[$index]" style="color:red;font-weight:bold;">输入0-100间的数字!</span>
+				</td>
+				<td>
+					<md-icon md-svg-icon="announcement" ng-click="canEdit($event)"></md-icon>
+				</td>-->
 			</tr>
 		</table>
 		<div layout="row" layout-align="center center" style="margin-bottom:50px;">
 			<md-button class="md-raised md-accent" ng-hide="isSubmitted" ng-click="submitData()">提交</md-button>
-			<md-button class="md-raised md-accent" ng-hide="isSubmitted" ng-click="storeData()">保存</md-button>
+			<!--<md-button class="md-raised md-accent" ng-hide="isSubmitted" ng-click="storeData()">保存</md-button>-->
 		</div>
 	</div>
 </div>

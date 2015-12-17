@@ -67,8 +67,8 @@
           <li class="cur_pro">{{sub.type}}</li>
           <li class="cur_pro">{{sub.class}}</li>
         </ul>
-        <md-button class="md-raised" ng-click="showRate($event,$index)">进入评分</md-button>
-        <md-button class="md-raised" ng-disabled="sub.isSubmitted">查看成绩情况</md-button>
+        <md-button class="md-raised" ng-click="showRate($event,$index)" ng-disabled="sub.isSubmitted">进入评分</md-button>
+        <md-button class="md-raised" ng-click="showGrade(sub, $index)" ng-disabled="!sub.isSubmitted">查看成绩情况</md-button>
         <md-divider></md-divider>
 	   </md-list-item>
     </md-list>

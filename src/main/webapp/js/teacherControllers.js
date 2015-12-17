@@ -1,9 +1,12 @@
 /****************************教师**************************/
-appControllers.controller('teacheSubCtrl',['$scope','$mdSidenav','$log','$mdDialog',function($scope,$mdSidenav,$log,$mdDialog){
+appControllers.controller('teacheSubCtrl',['$scope','$mdSidenav','$log','$mdDialog', "$http", function($scope,$mdSidenav,$log,$mdDialog, $http){
 	
 	/*****测试数据 */
+
+	$scope.IsSubmitted = false;
+	$scope.teachSubs = [];
 	$scope.test ={
-		status:true,IsSubmitted:false,msg:'',
+		status:true,IsSubmitted:false,msg:'', year: "2013-2014",
 		courses:
 		[
 			{ id:'1',name: 'Pepperoni',year:'2013-2014',type:'公共选修' },
@@ -20,48 +23,93 @@ appControllers.controller('teacheSubCtrl',['$scope','$mdSidenav','$log','$mdDial
 			{ id:'12',name: 'Green Peppers',year:'2013-2014',type:'公共选修' }
 		]
 	};
-	$scope.teachSubs=$scope.test.courses.map(function(tar,index){
-		 tar.wanted=false;
-		 return tar;
-	});
-	$scope.IsSubmitted=$scope.test.IsSubmitted;
-	
+
+	$scope.year = (function () {
+		var date = new Date();
+		var month = date.getMonth();
+		var year = date.getFullYear();
+		if(month >= 6)
+			return year + '-' + (year + 1) + '-1';
+		else
+			return (year - 1) + '-' + year + '-2';
+	})();
+
+	function testHandler() {
+		$scope.teachSubs=$scope.test.courses.map(function(tar,index){
+			tar.wanted=false;
+			return tar;
+		});
+		$scope.IsSubmitted=$scope.test.IsSubmitted;
+		$scope.year = $scope.test.year;
+		$scope.$digest();
+	}
+
+	$scope.refreshSubs = function (Subs, isSubmitted) {
+		this.teachSubs = Subs;
+		var defaultYear = $scope.year;
+		Subs.forEach(function(el) {
+			el.wanted = false;
+			el.type = "公选课";
+			el.year = el.year || defaultYear;
+		});
+
+		this.IsSubmitted = isSubmitted;
+		this.$digest();
+	};
+
 	
 	/******get获取所有公共选修课信息 */
-	$.ajax({
-		type:'get',
-		url:'/StudentManage/api/teacher/elective_courses',
-		success:function(result){
-			var j=$.parseJSON(result);
+	$http.get("api/user/self/elective_courses").then(function(result){
+			//result is already a js object
+			//var j=$.parseJSON(result);
+			var j = result.data;
 			if(j.status){
-				$scope.IsSubmitted=j.IsSubmitted;
-				$scope.teachSubs=j.courses.map(function(tar,index){
-					tar.wanted=false;
-					return tar;
-				});
+				$scope.refreshSubs(j.courses, j.isSubmitted);
+			}else{
+				testHandler();
 			}
-		},
-		error:function(result){
-			/***测试所用 */
-		}
-	});
+		}, testHandler);
+	//$.ajax({
+	//	type:'get',
+	//	url:'/StudentManage/api/user/self/elective_courses',
+	//	success:function(result){
+	//		//result is already a js object
+	//		//var j=$.parseJSON(result);
+	//		var j = result;
+	//		if(j.status){
+	//			$scope.refreshSubs(j.courses, j.isSubmitted);
+	//		}else{
+	//			testHandler();
+	//		}
+	//	},
+	//	error: testHandler
+	//	//error:function(result){
+	//	//	/***测试所用 */
+	//	//}
+	//});
 	
 	/****提交老师所选的课程 */
 	$scope.submitSub=function(ev){
 		/****上传老师打钩的选择的课程 */
-		var data=[];
+		var data={
+			year: $scope.year,
+			courses: []
+		};
+
 		$scope.teachSubs.forEach(function(tar,index){
 			if(tar.wanted)
-				data.push(tar.id);
+				data.courses.push(tar.id);
 		});
 		
 		$.ajax({
 			type:'post',
-			url:'/StudentManage/api/teacher/elective_courses',
-			data:{data:JSON.stringify(data)},
+			url:'/StudentManage/api/user/self/elective_courses',
+			data:JSON.stringify(data),
+			contentType: "application/json; charset=utf-8",
 			success:function(result){
-				var j=$.parseJSON(result);
-				if(j.result){
+				//var j=$.parseJSON(result);
+				var j = result;
+				if(j.status){
 					$mdDialog.show(
 						$mdDialog.alert().content('提交成功！').ok('确定').targetEvent(ev)).finally(function(){
 								$scope.IsSubmitted=true;});
@@ -88,22 +136,29 @@ appControllers.controller('teacheSubCtrl',['$scope','$mdSidenav','$log','$mdDial
 
 appControllers.controller('selectYearCtrl',['$scope','$location','$mdDialog',function($scope,$location,$mdDialog){
 	/***实验数据 */
-	$scope.cur_year=['2013-2-3','2013-4-12','2015-2-3','2013-5-3','2123-2-3'];
-	
+	$scope.cur_year = [];
+
+	function getYearFailHandler() {
+		$scope.cur_year=['2013-2-3','2013-4-12','2015-2-3','2013-5-3','2123-2-3'];
+	}
 	
 	/**实际开发用的ajax，用于获得select的所有年份 */
-	// $.ajax({
-	// 	type:'get',
-	// 	url:'/StudentManage/api/teacher/courses/year',
-	// 	success:function(result){
-	// 		var json=$.parseJSON(result);
-	// 		if(result.status)
-	// 			$scope.cur_year=json.years;
-	// 	},
-	// 	error:function(result){
-
-	// 	}
-	// });
+	 $.ajax({
+	 	type:'get',
+	 	url:'/StudentManage/api/user/self/courses/year',
+	 	success:function(result){
+	 		var json = result; //=$.parseJSON(result);
+	 		if(result.status) {
+				$scope.cur_year = json.years;
+				$scope.$digest();
+			} else
+				getYearFailHandler();
+	 	},
+	 	//error:function(result){
+         //
+	 	//}
+		 error: getYearFailHandler
+	 });
 	
 	/***选好年份，点确定按钮，跳转 */
 	$scope.selectYear=function(ev){
@@ -123,21 +178,25 @@ appControllers.controller('selectYearCtrl',['$scope','$location','$mdDialog',fun
 	}
 }]);
 
-appControllers.controller('accessScoreCtrl',['$scope','$mdSidenav','$routeParams','$mdDialog','$location',function($scope,$mdSidenav,$routeParams,$mdDialog,$location){
+appControllers.controller('accessScoreCtrl',['$scope','$mdSidenav','$routeParams','$mdDialog','$location', '$http', function($scope,$mdSidenav,$routeParams,$mdDialog,$location, $http){
 	/**获取选定的年份 */
-	$scope.year=$routeParams.year;
+	$scope.year = $routeParams.year;
 	
 	/***实践数据****/
-	$scope.subs=[
-		{id:'20132211025',year:'2013-3-4',name:'计算机任务程序艺术',type:'公共选修',department:'计信',major:'软件工程',teacher:'付文文',class:'软工1班',isSubmitted:false},
-		{id:'2013221102x',year:'2014-4-4',name:'操作系统',type:'公共选修',department:'计信',major:'计科1',teacher:'蜂窝网',class:'软工2班',isSubmitted:false},
-		{id:'2013221102a',year:'2015-3-4',name:'算法设计艺术',type:'公共基础',department:'计信',major:'软件工程',teacher:'范文芳',class:'软工3班',isSubmitted:true},
-		{id:'2013221102w',year:'2015-6-4',name:'计算机网络',type:'专业必修',department:'计信',major:'信息安全',teacher:'格格热',class:'软工4班',isSubmitted:false},
-		{id:'2013221102v',year:'2013-8-4',name:'Spring揭秘',type:'公共选修',department:'计信',major:'计科1',teacher:'付文文',class:'计科1班',isSubmitted:false},
-		{id:'2013221102d',year:'2013-12-4',name:'Web程序设计',type:'公共选修',department:'计信',major:'软件工程',teacher:'付文文',class:'计科1班',isSubmitted:true},
-		{id:'2013221102b',year:'2013-11-4',name:'J2EE技术解析',type:'专业必修',department:'计信',major:'计科2',teacher:'付文文',class:'计科1班',isSubmitted:false}
-	];
-	$scope.courses=$scope.subs;
+
+	$scope.courses = [];
+
+	function getCourseFailHandler() {
+		$scope.courses = [
+			{id:'20132211025',year:'2013-3-4',name:'计算机任务程序艺术',type:'公共选修',department:'计信',major:'软件工程',teacher:'付文文',class:'软工1班',isSubmitted:false},
+			{id:'2013221102x',year:'2014-4-4',name:'操作系统',type:'公共选修',department:'计信',major:'计科1',teacher:'蜂窝网',class:'软工2班',isSubmitted:false},
+			{id:'2013221102a',year:'2015-3-4',name:'算法设计艺术',type:'公共基础',department:'计信',major:'软件工程',teacher:'范文芳',class:'软工3班',isSubmitted:true},
+			{id:'2013221102w',year:'2015-6-4',name:'计算机网络',type:'专业必修',department:'计信',major:'信息安全',teacher:'格格热',class:'软工4班',isSubmitted:false},
+			{id:'2013221102v',year:'2013-8-4',name:'Spring揭秘',type:'公共选修',department:'计信',major:'计科1',teacher:'付文文',class:'计科1班',isSubmitted:false},
+			{id:'2013221102d',year:'2013-12-4',name:'Web程序设计',type:'公共选修',department:'计信',major:'软件工程',teacher:'付文文',class:'计科1班',isSubmitted:true},
+			{id:'2013221102b',year:'2013-11-4',name:'J2EE技术解析',type:'专业必修',department:'计信',major:'计科2',teacher:'付文文',class:'计科1班',isSubmitted:false}
+		];
+	}
 
 	/*****用作真实发送数据,获得某一年份的所有课程 */
 	// $.ajax({
@@ -153,29 +212,57 @@ appControllers.controller('accessScoreCtrl',['$scope','$mdSidenav','$routeParams
 	// 		$scope.courses=$scope.subs;
 	// 	}
 	// });
-	
-	
+	$http.get("/StudentManage/api/user/self/courses/year/" + $scope.year).then(
+		function (result) {
+            var d = result.data;
+			if(d.status) {
+				$scope.courses = d.courses.map(function (obj) {
+					return {
+						id: obj.id,
+						year: obj.year,
+						name: obj.name || "无名称",
+						type: obj.type || "无类型",
+						department: obj.department && obj.department.name,
+						major: obj.major && obj.major.name,
+						teacher: obj.teacher && obj.teacher.name,
+						class: obj.majorClass && obj.majorClass.name || "选修班级",
+						isSubmitted: obj.finished
+					}
+				});
+                $scope.$digest();
+			} else
+				getCourseFailHandler();
+		}, function (err) {
+			getCourseFailHandler();
+		}
+	)
+
+    $scope.showGrade = function(sub, index) {
+        $location.path('/calculateScore/'+sub.name+'/'+sub.type+'/'+sub.class+'/'+sub.id);
+    }
 
 	/****显示平时、考试比例设置对话框，并跳转 */
 	$scope.showRate=function(ev,index){
-		// ng-href="#/calculateScore/软件工程导论/公共选修/软件工程"
-		$mdDialog.show({
-			controller: selectRateController,
-			templateUrl: 'teacher/selectRate.html',
-			parent: angular.element(document.body),
-			targetEvent: ev,
-			clickOutsideToClose:true
+			// ng-href="#/calculateScore/软件工程导论/公共选修/软件工程"
+			$mdDialog.show({
+				controller: selectRateController,
+				templateUrl: 'teacher/selectRate.html',
+				parent: angular.element(document.body),
+				targetEvent: ev,
+				clickOutsideToClose:true
 			})
 			.then(function(obj) {
 				alert(obj.pRate+'  '+obj.jRate);
 				
 				//TODO:将pRate,jRate传回后台存储.........................
 				
-				var o=$scope.courses;
-				$location.path('/calculateScore/'+o[index].name+'/'+o[index].type+'/'+o[index].class+'/'+o[index].id);
+				var course = $scope.courses[index];
+                $location.path('/calculateScore/'+course.name+'/'+course.type+'/'+course.class+'/'+course.id);
 			}, function() {});
 	}
 	function selectRateController($scope, $mdDialog){   //selectRate Dialog 的控制器
+        $scope.pRate = 40;
+        $scope.jRate = 60;
 		$scope.hide = function() {
 			$mdDialog.hide();
 		};
@@ -191,12 +278,11 @@ appControllers.controller('accessScoreCtrl',['$scope','$mdSidenav','$routeParams
 			}
 		};
 	}
-	
-	
 }]);
 
 
-appControllers.controller('calScoreCtrl',['$scope','$routeParams','$mdSidenav','$mdDialog','$mdToast',function($scope,$routeParams,$mdSidenav,$mdDialog,$mdToast){
+appControllers.controller('calScoreCtrl',['$scope','$routeParams','$mdSidenav','$mdDialog','$mdToast', '$http',
+    function($scope,$routeParams,$mdSidenav,$mdDialog,$mdToast, $http){
 	
 	/****通过参数传过来的课程名、课程性质、班级以及id信息 */
 	$scope.sub=$routeParams.sub;
@@ -228,66 +314,116 @@ appControllers.controller('calScoreCtrl',['$scope','$routeParams','$mdSidenav','
 				{id:'2013221104220037',name:'爱疯舞',regularGrade:'10',finalExamGrade:'30',finalGrade:'89'}
 			]
 	};
+
+        function failHandler() {
+        	/***测试的初始化 */
+        	$scope.regularRate=$scope.test_stus.regularRate;
+        	$scope.examRate=$scope.test_stus.finalExamRate;
+        	$scope.isSubmitted=$scope.test_stus.isSubmitted;
+        	$scope.students=$scope.test_stus.students;
+        	$scope.p=$scope.test_stus.students.map(function(tar,index){
+        		return tar.regularGrade;
+        	});
+        	$scope.j=$scope.test_stus.students.map(function(tar,index){
+        		return tar.finalExamGrade;
+        	});
+        	$scope.z=$scope.test_stus.students.map(function(tar,index){
+        		return tar.finalGrade;
+        	});
+        	$scope.isNumError=$scope.test_stus.students.map(function(tar,index){
+        		return false;
+        	});
+        	$scope.isOverRange=$scope.isNumError.slice(0);
+        }
 	
 	
 	/****远程获取该班级并且复制平时、考试成绩比例 */
-	$.ajax({
-		type:'get',
-		url:'/StudentManage/api/teacher/courses/'+$scope.id,
-		success:function(result){
-			var json=$.parseJSON(result);
-			if(json.status){
-				$scope.regularRate=json.regularRate;
-				$scope.examRate=json.finalExamRate;
-				$scope.isSubmitted=json.isSubmitted;   //判断是否显示保存与提交按钮
-				$scope.students=json.students;
-				$scope.p=json.students.map(function(tar,index){
-					return tar.regularGrade;
-				});
-				$scope.j=json.students.map(function(tar,index){
-					return tar.finalExamGrade;
-				});
-				$scope.z=json.students.map(function(tar,index){
-					return tar.finalGrade;
-				});
-				$scope.isNumError=json.students.map(function(tar,index){
-					return false;
-				});
-				$scope.isOverRange=$scope.isNumError.slice(0);
-			}
-		},
-		error:function(result){
-			/***测试的初始化 */
-			$scope.regularRate=$scope.test_stus.regularRate;
-			$scope.examRate=$scope.test_stus.finalExamRate;
-			$scope.isSubmitted=$scope.test_stus.isSubmitted;
-			$scope.students=$scope.test_stus.students;
-			$scope.p=$scope.test_stus.students.map(function(tar,index){
-				return tar.regularGrade;
-			});
-			$scope.j=$scope.test_stus.students.map(function(tar,index){
-				return tar.finalExamGrade;
-			});
-			$scope.z=$scope.test_stus.students.map(function(tar,index){
-				return tar.finalGrade;
-			});
-			$scope.isNumError=$scope.test_stus.students.map(function(tar,index){
-				return false;
-			});
-			$scope.isOverRange=$scope.isNumError.slice(0);
-		}
-	});
+	//$.ajax({
+	//	type:'get',
+	//	url:'/StudentManage/api/teacher/courses/'+$scope.id,
+	//	success:function(result){
+	//		var json=$.parseJSON(result);
+	//		if(json.status){
+	//			$scope.regularRate=json.regularRate;
+	//			$scope.examRate=json.finalExamRate;
+	//			$scope.isSubmitted=json.isSubmitted;   //判断是否显示保存与提交按钮
+	//			$scope.students=json.students;
+	//			$scope.p=json.students.map(function(tar,index){
+	//				return tar.regularGrade;
+	//			});
+	//			$scope.j=json.students.map(function(tar,index){
+	//				return tar.finalExamGrade;
+	//			});
+	//			$scope.z=json.students.map(function(tar,index){
+	//				return tar.finalGrade;
+	//			});
+	//			$scope.isNumError=json.students.map(function(tar,index){
+	//				return false;
+	//			});
+	//			$scope.isOverRange=$scope.isNumError.slice(0);
+	//		}
+	//	},
+	//	error:function(result){
+	//		/***测试的初始化 */
+	//		$scope.regularRate=$scope.test_stus.regularRate;
+	//		$scope.examRate=$scope.test_stus.finalExamRate;
+	//		$scope.isSubmitted=$scope.test_stus.isSubmitted;
+	//		$scope.students=$scope.test_stus.students;
+	//		$scope.p=$scope.test_stus.students.map(function(tar,index){
+	//			return tar.regularGrade;
+	//		});
+	//		$scope.j=$scope.test_stus.students.map(function(tar,index){
+	//			return tar.finalExamGrade;
+	//		});
+	//		$scope.z=$scope.test_stus.students.map(function(tar,index){
+	//			return tar.finalGrade;
+	//		});
+	//		$scope.isNumError=$scope.test_stus.students.map(function(tar,index){
+	//			return false;
+	//		});
+	//		$scope.isOverRange=$scope.isNumError.slice(0);
+	//	}
+	//});
+
+        $http.get('/StudentManage/api/user/self/courses/'+$scope.id).then(
+            function(result) {
+                var d = result.data;
+                if(d.status) {
+                    $scope.regularRate = d.course.regularRate;
+                    $scope.examRate = d.course.finalExamRate;
+                    $scope.isSubmitted = d.course.finished;
+                    var regs = $scope.students = d.registrations;
+
+                    $scope.p = regs.map(function (tar, index) {
+                        return tar.regularGrade;
+                    });
+                    $scope.j = regs.map(function (tar, index) {
+                        return tar.finalExamGrade;
+                    });
+                    $scope.z = regs.map(function (tar, index) {
+                        return tar.finalGrade;
+                    });
+                    $scope.isNumError = regs.map(function (tar, index) {
+                        return false;
+                    });
+                    $scope.isOverRange = $scope.isNumError.slice(0);
+                } else
+                    failHandler();
+            }, function (err) {
+                failHandler();
+            }
+        );
 
 	
 	/*****是否可以编辑 */
 	$scope.canEdit=function(ev){
 		if($scope.isSubmitted){
-			$scope.isVisible=false;
-			$mdToast.show($mdToast.simple().content('已经提交,不能修改！！！'));
-		}
-		else{
-			$scope.isVisible?$scope.isVisible=false:$scope.isVisible=true;
-		}
+            $scope.isVisible=false;
+            $mdToast.show($mdToast.simple().content('已经提交,不能修改！！！'));
+        }
+        else{
+            $scope.isVisible?$scope.isVisible=false:$scope.isVisible=true;
+        }
 	}
 
 
@@ -343,14 +479,19 @@ appControllers.controller('calScoreCtrl',['$scope','$routeParams','$mdSidenav','
 		
 		$.ajax({
 			type:'post',
-			url:'/StudentManage/api/teacher/courses/'+$scope.id,
-			data:{data:JSON.stringify(post)},
+			url:'/StudentManage/api/user/self/courses/'+$scope.id,
+            contentType: "application/json",
+			data:JSON.stringify(post.student),
 			success:function(result){
-				var j=$.parseJSON(result);
-				if(j.status){
-					openAlert(ev,'提交成功！');
-				}
-			},
+                //var j=$.parseJSON(result);
+                var j = result;
+                if(j.status){
+                    openAlert(ev,'提交成功！');
+                    $scope.isSubmitted = true;
+                    $scope.canEdit();
+                } else
+                    openAlert(ev, "系统错误！");
+            },
 			error:function(result){
 				openAlert(ev,'系统忙，请稍后再试！');
 			}
