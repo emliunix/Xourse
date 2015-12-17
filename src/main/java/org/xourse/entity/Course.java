@@ -18,6 +18,8 @@ public class Course {
     private Integer regularRate = 60;
     @Column
     private Integer finalExamRate = 40;
+    @Column
+    private Boolean finished = false;
     @ManyToOne
     private Teacher teacher;
 
@@ -67,5 +69,13 @@ public class Course {
 
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
+    }
+
+    public Boolean getFinished() {
+        return finished;
+    }
+
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
     }
 }
