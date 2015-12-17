@@ -63,6 +63,10 @@ myIndexPage.config(['$routeProvider','$mdIconProvider',function($routeProvider,$
 			templateUrl: 'admin/stumanage.html',
 			controller: 'stumanageCtrl'
 		}).
+		when('/teamanage', {
+			templateUrl: 'admin/teamanage.html',
+			controller: 'teamanageCtrl'
+		}).
 		otherwise({
 			redirectTo:'/welcome'
 		});			

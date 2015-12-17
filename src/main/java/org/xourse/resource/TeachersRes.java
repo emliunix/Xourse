@@ -51,7 +51,7 @@ public class TeachersRes {
             return MessageUtils.fail(e.getMessage());
         }
         Map<String, Object> m = MessageUtils.success();
-        m.put("students", teas);
+        m.put("teachers", teas);
         return m;
     }
 
