@@ -30,18 +30,18 @@
 			<th width="60">编号</th>
 			<th width="160">课程名</th>
 			<th width="100">授课教师</th>
-			<th width="150">学院</th>
+			<!--<th width="150">学院</th>-->
 			<th width="100">班级</th>
 			<th width="120">平时成绩</th>
 			<th width="120">考试成绩</th>
 			<th width="120">最终成绩</th>									
 		</tr>
 		<tr ng-repeat="s in subs">
-			<td>{{$index+1}}</td>
-			<td>{{s.name}}</td>
-			<td>{{s.teacher}}</td>
-			<td>{{s.department}}</td>
-			<td>{{s.class}}</td>
+			<td>{{s.course.id}}</td>
+			<td>{{s.course.name}}</td>
+			<td>{{s.course.teacher.name}}</td>
+			<!--<td>{{s.department}}</td>-->
+			<td>{{s.course.majorClass && s.course.majorClass.name || "选修班级"}}</td>
 			<td>{{s.regularGrade}}</td>
 			<td>{{s.finalExamGrade}}</td>
 			<td>{{s.finalGrade}}</td>

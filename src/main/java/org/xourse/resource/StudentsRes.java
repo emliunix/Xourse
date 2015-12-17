@@ -1,18 +1,22 @@
 package org.xourse.resource;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.xourse.AccessDeniedException;
 import org.xourse.entity.*;
+import org.xourse.resource.info.StuRegInfo;
 import org.xourse.resource.info.StudentInfo;
 import org.xourse.service.CourseService;
 import org.xourse.service.UserService;
 import org.xourse.utils.MessageUtils;
 import org.xourse.utils.SessionUtils;
+import org.xourse.utils.TaskRunner;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -37,6 +41,8 @@ public class StudentsRes {
     private CourseService courseService;
     @Context
     private HttpServletRequest request;
+
+    private TaskRunner<Map<String, Object>> taskRunner = new TaskRunner<>();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -81,8 +87,10 @@ public class StudentsRes {
     public static class StudentSubmit {
         public Integer majorClassId;
         @JsonUnwrapped
+        @JsonIgnoreProperties("id")
         public Student student;
         @JsonUnwrapped
+        @JsonIgnoreProperties("id")
         public StudentProfile profile;
     }
 
@@ -121,7 +129,7 @@ public class StudentsRes {
                 return MessageUtils.fail("student not found");
             }
             Map<String, Object> m = MessageUtils.success();
-            m.put("student", new StudentInfo.Detailed(s));
+            m.put("user", new StudentInfo.Detailed(s));
             return m;
         }
 
@@ -165,84 +173,57 @@ public class StudentsRes {
             return MessageUtils.success();
         }
 
-
-        @Path("/elective_classes/year")
+        @Path("/elective_courses/year/{year : \\d{4}-\\d{4}-[12]}")
         @GET
         @Produces(MediaType.APPLICATION_JSON)
-        public Map<String, Object> getElectiveYears() {
-            List<String> years;
-            try {
-                years = courseService.findAllElectiveYears();
-            } catch (Exception e) {
-                return MessageUtils.fail(e);
-            }
-            Map<String, Object> m = MessageUtils.success();
-            m.put("years", years);
-            return m;
+        public Map<String, Object> getElectives(@PathParam("year") String year) {
+            Student s = new Student(id);
+            return taskRunner.run(() -> {
+                Map<String, Object> m = MessageUtils.success();
+                List<ElectiveCourse> ecs = courseService.findElectiveByYear(year);
+                Boolean isModifiable = courseService.isStudentModifiable(s, year);
+                m.put("courses", ecs);
+                m.put("isModifiable", isModifiable);
+                return m;
+            }, MessageUtils::fail);
         }
 
-        @Path("/elective_classes/year/{year : \\d+}")
-        @GET
-        @Produces(MediaType.APPLICATION_JSON)
-        public Map<String, Object> getElective(@PathParam("year")String year) {
-            List<ElectiveCourse> courses;
-            // when year is optional, figure out a value according to current date
-            if (null == year) {
-                Calendar c = Calendar.getInstance();
-                int n_year = c.get(Calendar.YEAR);
-                int n_month = c.get(Calendar.MONTH);
-                if (n_month >= 6) {
-                    year = Integer.toString(n_year) + "-" + Integer.toString(n_year + 1);
-                } else {
-                    year = Integer.toString(n_year - 1) + "-" + Integer.toString(n_year);
-                }
-            }
-            StudentState state;
-            try {
-                Student s = new Student(id);
-                state = courseService.findStudentState(s, year);
-                courses = courseService.findElectiveByYear(year);
-            } catch (Exception e) {
-                return MessageUtils.fail(e.getMessage());
-            }
-            Map<String, Object> m = MessageUtils.success();
-            m.put("isModifiable", null == state ? true : state.getModifiable());
-            m.put("courses", courses);
-            return m;
-        }
-
-        @Path("/elective_classes")
+        @Path("/elective_courses")
         @POST
         @Produces(MediaType.APPLICATION_JSON)
         public Map<String, Object> postElective(ElectiveSubmit submit) {
             Student s = new Student(id);
-            try {
+            return taskRunner.run(() -> {
+                Map<String, Object> m = MessageUtils.success();
                 courseService.stuSignForElectives(s, submit.courses, submit.year);
-            } catch (Exception e) {
-                return MessageUtils.fail(e);
-            }
-            return null;
+                return m;
+            }, MessageUtils::fail);
         }
 
         @Path("/courses/year")
         @GET
         @Produces(MediaType.APPLICATION_JSON)
         public Map<String, Object> getCourseYears() {
-            return null;
+        Student s = new Student(id);
+            return taskRunner.run(() -> {
+                Map<String, Object> m = MessageUtils.success();
+                List<String> years = courseService.findAllCourseYears(s);
+                m.put("years", years);
+                return m;
+            }, MessageUtils::fail);
         }
 
-        @Path("/courses")
-        @GET
-        @Produces(MediaType.APPLICATION_JSON)
-        public Map<String, Object> getCourses() {
-            return null;
-        }
-
-        @Path("/courses/year/{year : \\d{4}-\\d{4}}")
+        @Path("/courses/year/{year : \\d{4}-\\d{4}-[12]}")
         @GET
         @Produces(MediaType.APPLICATION_JSON)
         public Map<String, Object> getCoursesOfYear(@PathParam("year")String year) {
-            return MessageUtils.success(year);
+            Student s = new Student(id);
+            return taskRunner.run(() -> {
+                Map<String, Object> m = MessageUtils.success();
+                List<CourseRegistration> regs = courseService.findRegistrationsByStudentAndYear(s, year);
+                m.put("registrations", regs);
+                return m;
+            }, MessageUtils::fail);
         }
     }
 

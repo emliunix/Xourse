@@ -90,10 +90,16 @@ public class DBSetup {
         kb.setMajorClass(se13);
         tea1.setDepartment(ci);
 
+        Admin admin = new Admin("admin", "admin");
+
         for(User o : new User[] {lyh, kb, tea1}) {
             o.setPassword("password");
             session.save(o);
         }
+
+        session.save(admin);
+
+        // courses
 
         CoursePlan p1 = new CoursePlan("C语言", CoursePlan.CourseType.COMPULSORY),
                 p2 = new CoursePlan("PS大法", CoursePlan.CourseType.ELECTIVE);
@@ -115,6 +121,8 @@ public class DBSetup {
                 session.save(reg);
             }
         }
+
+        // course plans
 
         CoursePlan cp1 = new CoursePlan("篮球", CoursePlan.CourseType.ELECTIVE);
         CoursePlan cp2 = new CoursePlan("羽毛球", CoursePlan.CourseType.ELECTIVE);

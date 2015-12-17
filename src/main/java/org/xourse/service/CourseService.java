@@ -277,4 +277,17 @@ public class CourseService {
         Course tmp = (Course) getSession().get(Course.class, c.getId());
         tmp.setFinished(true);
     }
+
+    public List<String> findAllCourseYears(Student s) {
+        return getSession().createQuery("select distinct r.course.year from CourseRegistration r where student = :stu")
+        .setEntity("stu", s)
+        .list();
+    }
+
+    public List<CourseRegistration> findRegistrationsByStudentAndYear(Student s, String year) {
+        return getSession().createQuery("from CourseRegistration where student = :stu and course.year = :year")
+                .setString("year", year)
+                .setEntity("stu", s)
+                .list();
+    }
 }

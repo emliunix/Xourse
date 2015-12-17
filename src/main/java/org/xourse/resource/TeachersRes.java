@@ -126,7 +126,7 @@ public class TeachersRes {
                 return MessageUtils.fail("teacher not found");
             }
             Map<String, Object> m = MessageUtils.success();
-            m.put("teacher", new TeacherInfo.Detailed(t));
+            m.put("user", new TeacherInfo.Detailed(t));
             return m;
         }
 

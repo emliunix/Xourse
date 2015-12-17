@@ -160,6 +160,7 @@ public class UserService {
     private void mergeInStudentProfile(StudentProfile dest, StudentProfile src) {
         if(src.getIdCardNumber() != null) dest.setIdCardNumber(src.getIdCardNumber());
         if(src.getEmail() != null) dest.setEmail(src.getEmail());
+        if(src.getGender() != null) dest.setGender(src.getGender());
         if(src.getPoliticalStatus() != null) dest.setPoliticalStatus(src.getPoliticalStatus());
         if(src.getResidence() != null) dest.setResidence(src.getResidence());
         if(src.getSignature() != null) dest.setSignature(src.getSignature());

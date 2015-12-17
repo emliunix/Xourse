@@ -12,9 +12,10 @@ import org.xourse.entity.TeacherProfile;
 public class TeacherInfo {
     public Integer id;
     public String name;
+    public String number;
     public String teacherId;
     public String year;
-    public TeacherInfo(Teacher t) { id = t.getId(); name = t.getUsername(); teacherId = t.getTeacherId(); year = t.getYear(); }
+    public TeacherInfo(Teacher t) { id = t.getId(); number = t.getUsername(); name = t.getName(); teacherId = t.getTeacherId(); year = t.getYear(); }
 
     public static class WithDepartment extends TeacherInfo {
         public Department department;

@@ -15,9 +15,12 @@ appControllers.provider('hubuIdProvider',function(){
 	};
 });
 
-appControllers.controller('pageCtrl',['$scope','$mdSidenav','$mdDialog',function($scope,$mdSidenav,$mdDialog){
+appControllers.controller('pageCtrl',['$scope','$mdSidenav','$mdDialog', '$http',
+	function($scope,$mdSidenav,$mdDialog, $http){
 		$scope.username="liuhongsen";
-		
+
+		$scope.user = {};
+
 		$scope.menu=[
 			//学生部分
 			{'href':'#/welcome','text':'首页'},
@@ -33,15 +36,22 @@ appControllers.controller('pageCtrl',['$scope','$mdSidenav','$mdDialog',function
 			{'href':'#/newsmanage','text':'新闻管理'}
 		];
 
-	$.ajax({
-		url: "api/link",
-		method: "get"
-	}).then(function(data) {
-		var data = angular.fromJson(data);
-		if(data.status) {
-			$scope.menu = data.links;
-		}
-	});
+		$http.get("api/link").then(
+			function (result) {
+				var d = result.data;
+				if(d.status) {
+					$scope.menu = d.links;
+				}
+			}
+		);
+
+		$http.get("api/user/self").then(
+			function(result) {
+				var d = result.data;
+				if(d.status)
+					$scope.user = d.user;
+			}
+		);
 
 		$scope.openLeftMenu =function(){
 			$mdSidenav('left').toggle();
@@ -61,11 +71,12 @@ appControllers.controller('pageCtrl',['$scope','$mdSidenav','$mdDialog',function
 			.then(function(user) {
 				/****post数据*****/
 				$.ajax({
-					type:'post',
-					url:'fw.jsp',/*************暂未定论****/
-					data:{data:JSON.stringify(user)},
+					type:'put',
+					url:'api/user/self',
+					data:JSON.stringify(user),
+					contentType: "application/json",
 					success:function(result){
-						if($.parseJSON(result).status){
+						if(result.status){
 							 openDialog(ev,'修改成功！');
 						}
 					},
@@ -78,27 +89,37 @@ appControllers.controller('pageCtrl',['$scope','$mdSidenav','$mdDialog',function
 		/******对话框控制器******/	
 		function modifyInfoController($scope, $mdDialog){
 			/***实践数据****/
-			$scope.user={
+			$scope.user= { };
+			var ojb = {
 				name:'liuhongsenn',
-				number:'2013221104220014',
+				id:'2013221104220014',
 				political:'共青团员',
 				birthplace:'阳新',
 				hobby:'打篮球',
 				phone:'13971233334',
 				email:'1225355917@qq.com'
 			};
-			
+
 			/**********ajax发送请求获得初始化数据********/
-			$.ajax({
-				type:'get',
-				url:'',/*************暂未定论****/
-				success:function(result){
-					var j=$.parseJSON(result);
-					if(j.status){
-						$scope.user=j.user;
+			$http.get("api/user/self").then(
+				function (result) {
+					var d = result.data;
+					if(d.status) {
+						$scope.user = d.user;
 					}
 				}
-			});
+			)
+			
+			//$.ajax({
+			//	type:'get',
+			//	url:'',/*************暂未定论****/
+			//	success:function(result){
+			//		var j=$.parseJSON(result);
+			//		if(j.status){
+			//			$scope.user=j.user;
+			//		}
+			//	}
+			//});
 			
 			
 			$scope.hide = function() {

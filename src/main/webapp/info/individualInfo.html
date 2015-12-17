@@ -18,23 +18,26 @@
 
       <md-input-container>
         <label>政治面貌：</label>
-        <input ng-model="user.political" name="political"  required/>
+        <input ng-model="user.politicalStatus" name="politicalStatus"  required/>
       </md-input-container> 
 	  
       <md-input-container>
         <label>籍贯：</label>
-        <input ng-model="user.birthplace" name="birthplace"  required/>
+        <input ng-model="user.residence" name="residence"  required/>
       </md-input-container> 
 	  
 	  <md-input-container class="md-block">
-        <label>兴趣爱好：</label>
-        <input ng-model="user.hobby" name="hobby"  required/>
-      </md-input-container> 
+        <label>性别：</label>
+        <md-select ng-model="user.gender" name="gender"  required>
+          <md-option value="男">男</md-option>
+          <md-option value="女">女</md-option>
+        </md-select>
+      </md-input-container>
 	  
       <md-input-container class="md-block">
         <label>手机号码：</label>
-        <input ng-model="user.phone" name="phone"  required ng-pattern="/^[0-9]{11,11}$/"/>
-        <div ng-messages="indiviForm.phone.$error" role="alert">
+        <input ng-model="user.telNumber" name="telNumber"  required ng-pattern="/^[0-9]{11,11}$/"/>
+        <div ng-messages="indiviForm.telNumber.$error" role="alert">
           <div ng-message="pattern">
             手机号应该为11个数字！
           </div>

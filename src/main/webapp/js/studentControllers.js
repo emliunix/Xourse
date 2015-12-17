@@ -1,9 +1,21 @@
 /**************************** 学生 ********************************/
 
+function getYear(){
+    var d = new Date();
+    var y = d.getFullYear();
+    return d.getMonth() >= 6 ? "" + y + "-" + (y + 1) + "-1" : "" + (y - 1) + "-" + y + "-2";
+}
+
 //选择年份
-appControllers.controller('stuselectYearCtrl',['$scope','$timeout','$mdDialog','$location',function($scope,$timeout,$mdDialog,$location){
+appControllers.controller('stuselectYearCtrl',['$scope','$timeout','$mdDialog','$location', '$http',
+	function($scope,$timeout,$mdDialog,$location, $http){
 	
-	$scope.cur_year=['2013-2-3','2013-4-12','2015-2-3','2013-5-3','2123-2-3'];//测试数据
+	$scope.cur_year= [];
+
+	function failHandler() {
+		$scope.cur_year = ['2013-2-3','2013-4-12','2015-2-3','2013-5-3','2123-2-3'];//测试数据
+		//$scope.$digest();
+	}
 	
 	/**实际开发用的ajax，用于获得select的所有年份 */
 	// $.ajax({
@@ -18,6 +30,20 @@ appControllers.controller('stuselectYearCtrl',['$scope','$timeout','$mdDialog','
 
 	// 	}
 	// });
+
+		$http.get("/StudentManage/api/user/self/courses/year").then(
+			function (result) {
+				var d = result.data;
+				if(d.status) {
+					$scope.cur_year = d.years;
+					//$scope.$digest();
+				} else {
+					failHandler();
+				}
+			}, function (err) {
+				failHandler();
+			}
+		);
 	
 	/***选好年份，点确定按钮，跳转 */
 	$scope.stuselectYear=function(ev){
@@ -50,11 +76,18 @@ appControllers.controller('chooseSubjectCtrl',['$scope','$timeout','$mdDialog',f
 //   * POST {data:[{id, year, name, type, department, teacher,selectedNum}, ... ]} -> {status, msg}
 
 	$scope.isModifiable=true;
+	$scope.subs = [];
+	$scope.isSelected = [];
+	$scope.selectedSub = [];
+
+	$scope.year = getYear();
+
 	$.ajax({
 		type:'get',
-		url:'/StudentManage/api/student/elective_courses',
+		url:'/StudentManage/api/user/self/elective_courses/year/' + $scope.year,
 		success:function(result){
-			var j=$.parseJSON(result);
+			//var j=$.parseJSON(result);
+			var j = result;
 			if(j.status){
 				$scope.isModifiable=j.isModifiable;//判断学生是否提交，已提交的话就隐藏按钮
 				$scope.subs=j.courses;
@@ -64,14 +97,14 @@ appControllers.controller('chooseSubjectCtrl',['$scope','$timeout','$mdDialog',f
 				$scope.isSelected=$scope.subs.map(function(tar,index){
 					return false;
 				});
-				$scope.selectedSub=[];
+				$scope.$digest();
 			}
 		},
 		error:function(result){
 			
 			/*** region 测试数据****/
 			
-			$scope.test=[
+			var test=[
 				{id:'1',name:'高等数学',teacher:'王三都',seletedNum:'4'},
 				{id:'2',name:'计算机程序艺术',teacher:'李来华',seletedNum:'45'},
 				{id:'3',name:'外国历史名城赏析',teacher:'廖国栋',seletedNum:'12'},
@@ -83,7 +116,7 @@ appControllers.controller('chooseSubjectCtrl',['$scope','$timeout','$mdDialog',f
 				{id:'9',name:'ps初级入门',teacher:'范围分',seletedNum:'89'},
 				{id:'10',name:'旅行知识',teacher:'魏征',seletedNum:'99'}
 			];
-			$scope.subs=$scope.test;
+			$scope.subs= test;
 			for(var i=0;i<10;i++){$scope.subs.push({name:'旅行知识',teacher:'魏征',seletedNum:i.toString()});}
 			$scope.subs.forEach(function(tar,index){tar.index=index});
 			$scope.isSelected=$scope.subs.map(function(tar,index){
@@ -118,24 +151,32 @@ appControllers.controller('chooseSubjectCtrl',['$scope','$timeout','$mdDialog',f
 				.ok('确定')
 				.cancel('取消');
 			$mdDialog.show(confirm).then(function() {
+
+				var data = {};
+				data.courses = $scope.selectedSub.map(function(obj) {
+					return obj.id;
+				});
+				data.year = $scope.year;
 				
 				$.ajax({
 					type:'post',
-					url:'/StudentManage/api/student/elective_courses',
-					data:JSON.stringify($scope.selectedSub),
+					url:'/StudentManage/api/user/self/elective_courses',
+					data:JSON.stringify(data),
 					contentType: "application/json",
 					success:function(result){
-						var j=$.parseJSON(result);
+						//var j=$.parseJSON(result);
+						var j = result;
 						if(j.status){
 							openAlert(ev,'提交成功!');
 							$scope.isModifiable=false;
+							$scope.$digest();
 						}else{
 							openAlert(ev,'提交失败!');
 						}
 					},
 					error:function(result){
 						openAlert(ev,'系统忙，请稍后再试!');
-						$scope.isModifiable=false;
+						$scope.isModifiable=true;
 					}
 				});
 				
@@ -174,11 +215,13 @@ appControllers.controller('querySubjectCtrl',['$scope','$routeParams',function($
 	//ajax所得信息
 	$.ajax({
 		type:'get',
-		url:'/api/student/courses',
+		url:'/StudentManage/api/user/self/courses/year/' + $scope.year,
 		success:function(result){
-			var j=$.parseJSON(result);
+			//var j=$.parseJSON(result);
+            var j = result;
 			if(j.status){
-				$scope.subs=j.courses;
+				$scope.subs=j.registrations;
+                $scope.$digest();
 			}
 		}
 	});

@@ -25,7 +25,7 @@ public class LinkRes {
     private static final Link[] STUDENT_LINKS = new Link[] {
             new Link("#/welcome", "首页"),
             new Link("#/readnews", "查看新闻"),
-            new Link("#/chooseSubject", "选课与退课"),
+            new Link("#/chooseSubject", "课程选择"),
             new Link("#/stuselectYear", "查询课程信息"),
             new Link("#/ext/queryHubuScore", "查询湖大成绩")
     };
@@ -36,7 +36,15 @@ public class LinkRes {
             new Link("#/selectYear", "成绩结算")
     };
     private static final Link[] ADMIN_LINKS = new Link[] {
-
+            new Link("#/newsmanage", "新闻管理"),
+            new Link("#/usermanage", "用户管理"),
+            new Link("#/departmentmanage", "院系管理"),
+            new Link("#/majormanage", "专业管理"),
+            new Link("#/majorclassmanage", "行政班级管理"),
+            new Link("#/stumanage", "学生管理"),
+            new Link("#/teamanage", "教师管理"),
+            new Link("#/compulsorymanage", "必修课管理"),
+            new Link("#/courseplanmanage", "课程计划管理")
     };
 
     @GET

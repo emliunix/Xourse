@@ -34,8 +34,10 @@ public class SessionUtils {
             return null;
 
         Object o = session.getAttribute(SERVLET_USER_ATTRIBUTE);
-        if(!(o instanceof User))
+        if(!(o instanceof User)) {
+            session.invalidate();
             throw new IllegalStateException("User saved into session is not actually a User");
+        }
 
         return (User) o;
     }

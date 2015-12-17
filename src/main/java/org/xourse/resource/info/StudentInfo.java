@@ -11,13 +11,15 @@ import org.xourse.entity.StudentProfile;
  */
 public class StudentInfo {
     public Integer id;
+    public String number;
     public String name;
     public String year;
     public String studentId;
 
     public StudentInfo(Student s) {
         id = s.getId();
-        name = s.getUsername();
+        name = s.getName();
+        number = s.getUsername();
         studentId = s.getStudentId();
         year = s.getYear();
     }

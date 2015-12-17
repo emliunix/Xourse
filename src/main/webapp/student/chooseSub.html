@@ -128,7 +128,7 @@
 		<tr ng-repeat="sub in subs" ng-hide="isSelected[$index]">
 			<td>{{$index+1}}</td>
 			<td>{{sub.name}}</td>
-			<td>{{sub.teacher}}</td>
+			<td>{{sub.teacher.name}}</td>
 			<td>{{sub.seletedNum}}</td>
 			<td><md-checkbox aria-label="sub_check" class="md-secondary"ng-click="addSubItem($index)"></md-checkbox></td>
 		</tr>
@@ -147,7 +147,7 @@
 		<tr ng-repeat="s in selectedSub">
 			<td>{{$index+1}}</td>
 			<td>{{s.name}}</td>
-			<td>{{s.teacher}}</td>
+			<td>{{s.teacher.name}}</td>
 			<td>
 				<button  class="md-warn round" ng-click="removeFromSelected($index)">
 					<md-icon md-svg-icon="md-close"></md-icon>

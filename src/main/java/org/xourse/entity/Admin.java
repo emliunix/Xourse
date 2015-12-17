@@ -14,4 +14,13 @@ public class Admin extends User {
     {
         role = "admin";
     }
+
+    public Admin() {
+
+    }
+
+    public Admin(String username, String password) {
+        setUsername(username);
+        setPassword(password);
+    }
 }
