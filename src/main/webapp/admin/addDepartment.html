@@ -1,0 +1,24 @@
+<md-dialog aria-label="selectRate"  ng-cloak>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>添加学生</h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="cancel()">
+        <md-icon md-svg-src="front_frame/angular-material/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content style="max-width:800px;max-height:810px;min-width:400px; ">
+    <div class="md-dialog-content" style="font-weight:bold;">
+        <md-input-container class="md-block">
+            <label>名称</label>
+            <input ng-model="name" required/>
+        </md-input-container>
+    </div>
+  </md-dialog-content>
+  <div class="md-actions" layout="row">
+    <md-button ng-click="ok()" class="md-raised md-accent" style="margin-right:20px;" >
+      确定
+    </md-button>
+  </div>
+</md-dialog>
