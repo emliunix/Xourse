@@ -60,7 +60,7 @@ public class MajorService {
     }
 
     public List<MajorClass> findMajorClasses(int id) {
-        Major m = (Major)getSession().get(MajorClass.class, id);
+        Major m = (Major)getSession().get(Major.class, id);
         if(null == m)
             return null;
         Hibernate.initialize(m.getClasses());

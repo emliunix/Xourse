@@ -24,11 +24,11 @@ public class StudentInfo {
         year = s.getYear();
     }
     public static class WithClass extends StudentInfo {
-        public MajorClassInfo classInfo;
+        public MajorClassInfo.WithMajor classInfo;
         public WithClass(Student s) {
             super(s);
             if(null != s.getMajorClass())
-                classInfo = new MajorClassInfo(s.getMajorClass());
+                classInfo = new MajorClassInfo.WithMajor(s.getMajorClass());
         }
     }
 

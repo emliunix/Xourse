@@ -59,6 +59,10 @@ myIndexPage.config(['$routeProvider','$mdIconProvider',function($routeProvider,$
 			templateUrl:'admin/newsmanage.html',
 			controller:'newsmanageCtrl'
 		}).
+		when('/stumanage', {
+			templateUrl: 'admin/stumanage.html',
+			controller: 'stumanageCtrl'
+		}).
 		otherwise({
 			redirectTo:'/welcome'
 		});			

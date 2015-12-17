@@ -31,7 +31,6 @@ public class User {
     @Column(name = "username", nullable = false)
     private String username;
 
-    @JsonIgnore
     @Column(nullable = false)
     private String password;
 

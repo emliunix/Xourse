@@ -77,11 +77,11 @@ appControllers.controller('newsmanageCtrl',['$scope','$mdDialog',function($scope
 					data:{title:news.title,date:news.date,content:news.content},  //格式：{title,year,content}
 					success:function(result){
 						if($.parseJSON(result).status){
-							 openAlert(ev,'添加新闻成功！');
+							 openAlert('添加新闻成功！');
 						}
 					},
 					error:function(r){
-						openAlert(ev,'系统忙，请稍候再试！');
+						openAlert('系统忙，请稍候再试！');
 					}
 				});
 			}, function() {});
@@ -148,27 +148,18 @@ appControllers.controller('newsmanageCtrl',['$scope','$mdDialog',function($scope
 					success:function(result){
 						var j=$.parseJSON(result);
 						if(j.status){
-							openAlert(ev,'删除成功');
+							openAlert('删除成功');
 							$scope.news.splice(index,1);
 						}
 					},
 					error:function(result){
-						openAlert(ev,'系统忙，请稍后再试!');
+						openAlert('系统忙，请稍后再试!');
 					}
 				});
                 
             });
             
     }
-    
-    function openAlert(ev,msg){
-        $mdDialog.show(
-            $mdDialog.alert()
-                .parent(angular.element(document.body))
-                .clickOutsideToClose(true)
-                .content(msg)
-                .ariaLabel('Alert Dialog Demo')
-                .ok('确定'));
-    }
+
+    openAlert = openAlertFactory($mdDialog);
 }]);
-	
