@@ -71,6 +71,18 @@ myIndexPage.config(['$routeProvider','$mdIconProvider',function($routeProvider,$
 			templateUrl: 'admin/departmentmanage.html',
 			controller: 'departmentmanageCtrl'
 		}).
+		when('/majormanage', {
+			templateUrl: 'admin/majormanage.html',
+			controller: 'majormanageCtrl'
+		}).
+		when('/classmanage', {
+			templateUrl: 'admin/classmanage.html',
+			controller: 'classmanageCtrl'
+		}).
+		when('/courseplanmanage', {
+			templateUrl: 'admin/courseplanmanage.html',
+			controller: 'courseplanmanageCtrl'
+		}).
 		otherwise({
 			redirectTo:'/welcome'
 		});			

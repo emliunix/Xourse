@@ -21,7 +21,7 @@ public class MajorClass {
     private String year;
     @Column(length = 50)
     private String name;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Major major;
     @JsonIgnore
     @OneToMany(mappedBy = "majorClass", fetch = FetchType.LAZY)

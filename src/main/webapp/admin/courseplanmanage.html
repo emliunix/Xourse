@@ -27,20 +27,18 @@
 <div style="width:100%;min-height:100%;background:#efefef">
 	<table class="selected_sub" cellpadding="3" align="center">
 		<tr>
-			<th width="200">编号</th>
-			<th width="130">姓名</th>
-			<th width="200">学院</th>
-			<th width="100">入职时间</th>
+			<th width="40">编号</th>
+			<th width="150">名称</th>
+			<th width="150">类型</th>
 			<!-- Add Item -->
 			<th width="150">
 				<md-button class="md-raised" ng-click="add()">添加</md-button>
 			</th>
 		</tr>
 		<tr ng-repeat="i in items">
-			<td>{{i.number}}</td>
+			<td>{{i.id}}</td>
 			<td>{{i.name}}</td>
-			<td>{{i.department.name}}</td>
-			<td>{{i.year}}</td>
+			<td>{{cvtr[i.type]}}</td>
 			<!-- Operations Edit/Delete -->
 			<td>
 				<md-button class="md-raised md-warn" ng-click="del(i.id)">删除</md-button>

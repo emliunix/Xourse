@@ -18,7 +18,7 @@ public class Major {
     private Integer id;
     @Column
     private String name;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Department department;
     @JsonIgnore
     @OneToMany(mappedBy = "major")

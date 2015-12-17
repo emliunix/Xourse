@@ -30,10 +30,10 @@ public class MajorClassesRes {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Map<String, Object> getMajorClasses() {
-        List<MajorClassInfo> classes = null;
+        List<MajorClass> classes = null;
         try {
-            classes = majorClassService.findAll().stream()
-            .map(MajorClassInfo::new).collect(Collectors.toList());
+            classes = majorClassService.findAll();/*.stream()
+            .map(MajorClassInfo::new).collect(Collectors.toList());*/
         } catch (Exception e) {
             return MessageUtils.fail("failed");
         }

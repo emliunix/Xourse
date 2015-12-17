@@ -35,10 +35,10 @@ public class MajorsRes {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Map<String, Object> getMajors() {
-        List<MajorInfo> ms = null;
+        List<Major> ms = null;
         try {
-            ms = majorService.findAll().stream()
-            .map(MajorInfo::new).collect(Collectors.toList());
+            ms = majorService.findAll();/*.stream()
+            .map(MajorInfo::new).collect(Collectors.toList());*/
         } catch (Exception e) {
             return MessageUtils.fail("failed");
         }

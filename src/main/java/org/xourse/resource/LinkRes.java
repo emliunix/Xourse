@@ -40,7 +40,7 @@ public class LinkRes {
 //            new Link("#/usermanage", "用户管理"),
             new Link("#/departmentmanage", "院系管理"),
             new Link("#/majormanage", "专业管理"),
-            new Link("#/majorclassmanage", "行政班级管理"),
+            new Link("#/classmanage", "行政班级管理"),
             new Link("#/stumanage", "学生管理"),
             new Link("#/teamanage", "教师管理"),
             new Link("#/compulsorymanage", "必修课管理"),
