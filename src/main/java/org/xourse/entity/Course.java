@@ -21,6 +21,8 @@ public class Course {
     @Column
     private Boolean finished = false;
     @ManyToOne
+    private Department department;
+    @ManyToOne
     private Teacher teacher;
 
     public Integer getId() {
@@ -77,5 +79,13 @@ public class Course {
 
     public void setFinished(Boolean finished) {
         this.finished = finished;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 }
