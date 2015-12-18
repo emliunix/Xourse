@@ -1,7 +1,7 @@
 <md-dialog aria-label="selectRate"  ng-cloak>
   <md-toolbar>
     <div class="md-toolbar-tools">
-      <h2>添加班级</h2>
+      <h2>添加必修课</h2>
       <span flex></span>
       <md-button class="md-icon-button" ng-click="cancel()">
         <md-icon md-svg-src="front_frame/angular-material/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
@@ -11,25 +11,33 @@
   <md-dialog-content style="max-width:800px;max-height:810px;min-width:400px; ">
     <div class="md-dialog-content" style="font-weight:bold;">
         <md-input-container class="md-block">
-            <label>名称</label>
-            <input ng-model="name" required/>
+            <label>课程</label>
+            <md-select ng-model="name">
+                <md-option ng-repeat="x in plan" value="{{x.name}}">{{x.name}}</md-option>
+            </md-select>
         </md-input-container>
         <md-input-container class="md-block">
-          <label>学院</label>
-          <md-select ng-model="did" ng-change="getMajor(did)">
-            <md-option ng-repeat="x in department" value="{{x.id}}">{{x.name}}</md-option>
-          </md-select>
+            <label>学院</label>
+            <md-select ng-model="did" ng-change="departmentChanged(did)">
+                <md-option ng-repeat="x in department" value="{{x.id}}">{{x.name}}</md-option>
+            </md-select>
         </md-input-container>
         <md-input-container class="md-block">
             <label>专业</label>
-            <md-select ng-model="majorId">
+            <md-select ng-model="mid" ng-change="getClasses(mid)">
                 <md-option ng-repeat="x in major" value="{{x.id}}">{{x.name}}</md-option>
             </md-select>
         </md-input-container>
         <md-input-container class="md-block">
-            <label>年份</label>
-            <md-select ng-model="curr_year">
-                <md-option ng-repeat="x in year" value="{{x}}">{{x}}</md-option>
+            <label>班级</label>
+            <md-select ng-model="classId">
+                <md-option ng-repeat="x in class" value="{{x.id}}">{{x.name}}</md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container class="md-block">
+            <label>老师</label>
+            <md-select ng-model="teacherId">
+                <md-option ng-repeat="x in teacher" value="{{x.id}}">{{x.name}}</md-option>
             </md-select>
         </md-input-container>
     </div>

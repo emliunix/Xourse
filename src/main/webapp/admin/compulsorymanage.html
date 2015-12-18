@@ -1,0 +1,54 @@
+<style type="text/css">
+
+	table.selected_sub th
+	{
+		background:#107Cea;
+		height:45px;
+		font-size:18px;
+		font-weight:bold;
+		color:white;
+	}
+	table.selected_sub th
+	{
+		background:#31708f;
+	}
+	table.selected_sub
+	{
+		margin:30px auto;
+	}
+	table.selected_sub td
+	{
+		background:	#d9edf7;
+		text-align: center;
+		height:35px;
+	}
+</style>
+
+<div style="width:100%;min-height:100%;background:#efefef">
+	<table class="selected_sub" cellpadding="3" align="center">
+		<tr>
+			<th width="200">编号</th>
+			<th width="130">名称</th>
+			<th width="130">班级</th>
+			<th width="100">老师</th>
+			<th width="130">时间</th>
+			<!-- Add Item -->
+			<th width="150">
+				<md-button class="md-raised" ng-click="add()">添加</md-button>
+			</th>
+		</tr>
+		<tr ng-repeat="i in items">
+			<td>{{i.id}}</td>
+			<td>{{i.name}}</td>
+			<td>{{i.majorClass.name}}</td>
+			<td>{{i.teacher.name}}</td>
+			<td>{{i.year}}</td>
+			<!-- Operations Edit/Delete -->
+			<td>
+				<!--<md-button class="md-raised md-warn" ng-click="del(i.id)">删除</md-button>-->
+			</td>
+		</tr>
+	</table>
+</div>
+
+ <!--[{id, year, name, type, department, major, teacher, class, regularGrade, finalExamGrade, finalGrade}, ...]}-->

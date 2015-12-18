@@ -35,6 +35,10 @@ public class MajorClass {
         this.year = year;
     }
 
+    public MajorClass(int id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }

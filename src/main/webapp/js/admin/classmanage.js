@@ -50,6 +50,12 @@ appControllers.controller('classmanageCtrl',['$scope','$mdDialog', '$http', func
         $scope.department = [];
         $scope.major = [];
         $scope.majorId = "";
+        $scope.year = (function(){
+            var data = [];
+            for(var i = 1990; i <= 2020; ++i) data.push(i);
+            return data;
+        })();
+        $scope.curr_year = new Date().getFullYear();
 
         $scope.getMajor= function (did) {
             $http.get("api/department/" + did + "/majors").then(function (result) {
@@ -67,7 +73,7 @@ appControllers.controller('classmanageCtrl',['$scope','$mdDialog', '$http', func
             $mdDialog.hide({
                 name: $scope.name,
                 majorId: $scope.majorId,
-                year: new Date().getFullYear()
+                year: $scope.curr_year
             });
         }
 

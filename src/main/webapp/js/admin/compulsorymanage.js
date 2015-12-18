@@ -1,18 +1,18 @@
 
-// 教师控制器
+// 必修课控制器
 
-appControllers.controller('teamanageCtrl',['$scope','$mdDialog', '$http', function($scope, $mdDialog, $http){
+appControllers.controller('compulsorymanageCtrl',['$scope','$mdDialog', '$http', function($scope, $mdDialog, $http){
     var openAlert = openAlertFactory($mdDialog);
     var openConfirm = openConfirmFactory($mdDialog);
 
     $scope.items = [];
 
     $scope.refresh = function() {
-        $http.get("api/teacher").then(
+        $http.get("api/compulsory").then(
             function (result) {
                 var d = result.data;
                 if (d.status) {
-                    $scope.items = d.teachers;
+                    $scope.items = d.courses;
                 }
             }, function (err) {
 
@@ -23,13 +23,13 @@ appControllers.controller('teamanageCtrl',['$scope','$mdDialog', '$http', functi
     $scope.add = function(){
         $mdDialog.show({
             controller: addCtrl,
-            templateUrl: 'admin/addTea.html',
+            templateUrl: 'admin/addCompulsory.html',
             parent: angular.element(document.body),
             //targetEvent: ev,
             clickOutsideToClose:true
         }).then(
             function(obj) {
-                $http.post("api/teacher", obj).then(
+                $http.post("api/compulsory", obj).then(
                     function (result) {
                         var d = result.data;
                         if(d.status) {
@@ -46,16 +46,36 @@ appControllers.controller('teamanageCtrl',['$scope','$mdDialog', '$http', functi
 
     function addCtrl($scope, $mdDialog) {
 
-        $scope.username = "";
         $scope.name = "";
         $scope.department = [];
-        $scope.departmentId = "";
-        $scope.year = (function(){
-            var data = [];
-            for(var i = 1990; i <= 2020; ++i) data.push(i);
-            return data;
-        })();
-        $scope.curr_year = new Date().getFullYear();
+        $scope.major = [];
+        $scope.class = [];
+        $scope.teacher = [];
+        $scope.plan = [];
+        $scope.classId = "";
+        $scope.teacherId = "";
+
+        $scope.departmentChanged = function (did) {
+            $http.get("api/department/" + did + "/majors").then(function (result) {
+                var d = result.data;
+                if(d.status)
+                    $scope.major = d.majors;
+            })
+
+            $http.get("api/department/" + did + "/teachers").then(function (result) {
+                var d = result.data;
+                if(d.status)
+                    $scope.teacher = d.teachers;
+            })
+        };
+
+        $scope.getClasses = function (mid) {
+            $http.get("api/major/" + mid + "/classes").then(function (result) {
+                var d = result.data;
+                if(d.status)
+                    $scope.class = d.classes;
+            })
+        };
 
         $scope.cancel = function () {
             $mdDialog.cancel();
@@ -63,11 +83,10 @@ appControllers.controller('teamanageCtrl',['$scope','$mdDialog', '$http', functi
 
         $scope.ok = function () {
             $mdDialog.hide({
-                year: $scope.curr_year,
-                username: $scope.username,
+                year: getYear(),
                 name: $scope.name,
-                departmentId: $scope.departmentId,
-                password: $scope.username
+                classId: $scope.classId,
+                teacherId: $scope.teacherId
             });
         }
 
@@ -76,11 +95,17 @@ appControllers.controller('teamanageCtrl',['$scope','$mdDialog', '$http', functi
             if(d.status)
                 $scope.department = d.departments;
         })
+
+        $http.get("api/compulsory/plans").then(function (result) {
+            var d = result.data;
+            if(d.status)
+                $scope.plan = d.plans;
+        })
     }
 
     $scope.del = function(id) {
         openConfirm("确定删除？").then(function() {
-            $http.delete('api/teacher/' + id).then(
+            $http.delete('api/student/' + id).then(
                 function (r) {
                     var d = r.data;
                     if(d.status) {

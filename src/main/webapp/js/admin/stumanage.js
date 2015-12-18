@@ -73,7 +73,13 @@ appControllers.controller('stumanageCtrl',['$scope','$mdDialog', '$http', functi
         $scope.department = [];
         $scope.major = [];
         $scope.class = [];
+        $scope.year = (function(){
+            var data = [];
+            for(var i = 1990; i <= 2020; ++i) data.push(i);
+            return data;
+        })();
         $scope.classid;
+        $scope.curr_year = new Date().getFullYear();
 
         $scope.getMajor= function (did) {
             $http.get("api/department/" + did + "/majors").then(function (result) {
@@ -97,7 +103,7 @@ appControllers.controller('stumanageCtrl',['$scope','$mdDialog', '$http', functi
 
         $scope.ok = function () {
             $mdDialog.hide({
-                year: new Date().getFullYear(),
+                year: $scope.curr_year,
                 username: $scope.username,
                 name: $scope.name,
                 majorClassId: $scope.classid,

@@ -65,7 +65,16 @@ public class CourseService {
     }
 
     public int createCompulsory(CompulsoryCourse course) {
-        return (int)getSession().save(course);
+        Session sess = getSession();
+        int id = (int)sess.save(course);
+        MajorClass clazz = (MajorClass) sess.get(MajorClass.class, course.getMajorClass().getId());
+        for(Student s : clazz.getStudents()) {
+            CourseRegistration reg = new CourseRegistration();
+            reg.setCourse(course);
+            reg.setStudent(s);
+            sess.save(reg);
+        }
+        return id;
     }
 
     public int createElective(ElectiveCourse course) {
@@ -288,6 +297,12 @@ public class CourseService {
         return getSession().createQuery("from CourseRegistration where student = :stu and course.year = :year")
                 .setString("year", year)
                 .setEntity("stu", s)
+                .list();
+    }
+
+    public List<CoursePlan> findAllCompulsoryPlan() {
+        return getSession().createQuery("from CoursePlan where type = :type")
+                .setParameter("type", CoursePlan.CourseType.COMPULSORY)
                 .list();
     }
 }

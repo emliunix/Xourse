@@ -36,6 +36,12 @@
                 <md-option ng-repeat="x in class" value="{{x.id}}">{{x.name}}</md-option>
             </md-select>
         </md-input-container>
+        <md-input-container class="md-block">
+            <label>年份</label>
+            <md-select ng-model="curr_year">
+                <md-option ng-repeat="x in year" value="{{x}}">{{x}}</md-option>
+            </md-select>
+        </md-input-container>
     </div>
   </md-dialog-content>
   <div class="md-actions" layout="row">

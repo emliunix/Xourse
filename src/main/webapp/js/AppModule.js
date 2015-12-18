@@ -83,6 +83,10 @@ myIndexPage.config(['$routeProvider','$mdIconProvider',function($routeProvider,$
 			templateUrl: 'admin/courseplanmanage.html',
 			controller: 'courseplanmanageCtrl'
 		}).
+		when('/compulsorymanage', {
+			templateUrl: 'admin/compulsorymanage.html',
+			controller: 'compulsorymanageCtrl'
+		}).
 		otherwise({
 			redirectTo:'/welcome'
 		});			

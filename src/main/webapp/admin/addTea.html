@@ -1,7 +1,7 @@
 <md-dialog aria-label="selectRate"  ng-cloak>
   <md-toolbar>
     <div class="md-toolbar-tools">
-      <h2>添加学生</h2>
+      <h2>添加教师</h2>
       <span flex></span>
       <md-button class="md-icon-button" ng-click="cancel()">
         <md-icon md-svg-src="front_frame/angular-material/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
@@ -22,6 +22,12 @@
             <label>学院</label>
             <md-select ng-model="departmentId">
                 <md-option ng-repeat="x in department" value="{{x.id}}">{{x.name}}</md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container class="md-block">
+            <label>年份</label>
+            <md-select ng-model="curr_year">
+                <md-option ng-repeat="x in year" value="{{x}}">{{x}}</md-option>
             </md-select>
         </md-input-container>
     </div>
